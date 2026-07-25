@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>三角洲行动拆解 · 李俊彦</title>
+  <meta name="description" content="三角洲行动拆解 · 李俊彦" />
+  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="stylesheet" href="assets/doc.css" />
+  <link rel="icon" href="assets/avatar.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">李俊彦<span>.</span></a>
+      <nav class="nav__links" id="navLinks">
+        <a href="index.html">← 返回首页</a>
+      </nav>
+      <div class="nav__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+          <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <button class="nav__burger" id="navBurger" aria-label="菜单"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <main class="container">
+    <article class="doc">
+      <h1 class="doc-h1">《三角洲行动》游戏拆解（数值策划视角）</h1>
+      <blockquote>拆解目标：为游戏数值策划岗位（网易雷火）申请材料准备一份<strong>结构化、可讲、可深挖</strong>的游戏分析底稿。 拆解立场：以「数值设计」为切口，而非泛泛的玩家评测。 配套文档： - 《三角洲行动_伤害计算与护甲机制详解.md》—— 武器伤害四层模型与护甲穿透 - 《三角洲行动_官方Wiki武器数值统计.md / .docx》—— 官方接口抓取的 50 把枪真实数值 - extract_deltaforce_weapons.py —— 可随版本重跑刷新的武器数据提取脚本</blockquote>
+      <h2 class="doc-h2">0. 一句话定位</h2>
+      <p><strong>《三角洲行动》（Delta Force）是腾讯天美 J3 工作室（琳琅天上 / Team Jade）用虚幻引擎打造的「多端互通战术射击 GaaS」，把 Tarkov 式的硬核搜打撤、Battlefield 式的大战场、以及带职业技能的干员体系三</strong><strong>个维度</strong><strong>揉进同一个免费长线运营产品里。</strong></p>
+      <p>它的核心赌注是：用「搜打撤」抓硬核 FPS 用户，用「大战场」和「干员技能」降门槛抓泛用户，再用「全平台 + 全自控 IP」做长线收入。</p>
+      <h2 class="doc-h2">1. 产品定位与市场</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>维度</strong></td><td><strong>内容</strong></td></tr>
+      <tr><td>研发</td><td>腾讯天美工作室群 J3 工作室（琳琅天上团队），对外代号 <strong>Team Jade</strong></td></tr>
+      <tr><td>发行</td><td>国内腾讯；海外 <strong>Level Infinite</strong>；SEA/MENA/LATAM 由 <strong>Garena</strong> 代理</td></tr>
+      <tr><td>引擎</td><td>战役用 <strong>UE5</strong>；多人联网用 <strong>UE4</strong>（官方路线图：2026 H2 计划整体迁移 UE5）</td></tr>
+      <tr><td>反作弊</td><td><strong>ACE（Anti-Cheat Expert）</strong>，内核级 Ring 0，上线初期因卸载残留、与其他反作弊冲突引发争议</td></tr>
+      <tr><td>上线时间线</td><td>2024-09-26 国服公测（PC+移动）→ 2024-12-05 全球 PC（Steam 非删档）→ 2025-02-21「黑鹰坠落」战役 PC DLC → 2025-04-22 全球手游 → 2025-08-19 PS5 / Xbox Series X\</td></tr>
+      <tr><td>战略标签</td><td>腾讯首个「<strong>四全</strong>」IP：全球化发行、全终端上线、全平台打通、全自控 IP（无 IP 授权费、分成自由）</td></tr>
+      <tr><td>规模</td><td>国内 DAU 峰值 2025-04 破 1200 万、2025-07 破 2000 万、2025-09 破 3000 万；Steam 同屏峰值 2025-09 约 24.7 万、2026-06 约 11–12 万；全球手游上线首 4 日注册破千万，登顶 169 国 App Store 免费榜</td></tr>
+      <tr><td>商业表现</td><td>2025Q2 财报 DAU 环比 +66% 至 2000 万+，流水前三；S6 赛季 + 周年庆（2025-09）收入环比 +76%</td></tr>
+      </table></div>
+      <p><strong>数策视角解读</strong>：</p>
+      <p>「四全」本质是<strong>成本结构与可控性</strong>问题——自控 IP 意味着数值/商业化调整不受授权方掣肘，能「两个月一次体系化版本迭代」。对数值策划而言，这意味着你调的数值会<strong>高频、直接</strong>地进入生产环境，迭代节奏远快于买断制 3A。</p>
+      <p>DAU 曲线（1200→2000→3000 万）说明它不是「上线即巅峰」的买量型产品，而是靠赛季内容 + 模式广度吃了长尾。数值策划要服务的是<strong>长线留存曲线</strong>，而非首发爆量。</p>
+      <h2 class="doc-h2">2. 核心玩法循环</h2>
+      <p>游戏有三条并行的「循环」，但<strong>真正吃数值深度的是「烽火地带」的搜打撤循环</strong>，因为它把 FPS 对枪、RPG 养成、经济系统三套数值拧在一起。</p>
+      <h3 class="doc-h3">2.1 烽火地带（Operations / 搜打撤）核心循环</h3>
+      <figure><img src="assets/deltaforce/deltaforce_01.png" alt="deltaforce 图1" loading="lazy"/></figure>
+      <p><strong>这条循环的数值骨架是「风险—收益曲线」</strong>：</p>
+      <p>进场成本（装备/弹药/维修）是固定支出，撤离收益是带方差的随机变量（爆率、物品价值分布），死亡惩罚是「失去本局所有非保险物资」。这正是搜打撤品类最考验数值策划的地方——<strong>入口（掉落/任务产出）与出口（消耗/税收）如何配平以控制通胀</strong>。</p>
+      <h3 class="doc-h3">2.2 全面战场（Warfare）循环</h3>
+      <p>典型「占点 + 载具 + 32v32」大战场循环：复活 → 推进/占点 → 死亡复活。数值重点是<strong>载具强度、占点节奏、单局时长、击杀反馈</strong>，没有 persistence 经济。</p>
+      <h2 class="doc-h2">3. 二模式架构对比</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td>维度</td><td>烽火地带 (Operations)</td><td>全面战场 (Warfare)</td></tr>
+      <tr><td>玩法内核</td><td>搜打撤（Extraction）</td><td>大战场占点（Battlefield-like）</td></tr>
+      <tr><td>队伍</td><td>3 人小队</td><td>32 v 32</td></tr>
+      <tr><td>经济系统</td><td>有（哈夫币、物资持久化）</td><td>无</td></tr>
+      <tr><td>护甲系统</td><td><strong>有护甲耐久</strong>（破损/维修）</td><td><strong>无护甲耐久</strong>（公式退化）</td></tr>
+      <tr><td>载具</td><td>少量（直升机支援等）</td><td>大量（坦克/直升机/艇）</td></tr>
+      <tr><td>干员技能</td><td>全生效</td><td>全生效</td></tr>
+      <tr><td>数值深度</td><td>★★★★★（最复杂）</td><td>★★★（对抗平衡）</td></tr>
+      <tr><td>长线运营权重</td><td>最高（圈钱主力）</td><td>中（被玩家吐槽「放养」）</td></tr>
+      </table></div>
+      <p><strong>数策关键洞察</strong>：同一个「武器伤害」在两种模式里走了<strong>两套结算公式</strong>。烽火地带的护甲耐久系统让伤害公式变成「四层」（命中→基础肉伤×部位×距离→护甲判定渗漏→结算）；大战场没有护甲耐久，公式退化为「三层」。</p>
+      <p>这意味着<strong>同一把枪的 TTK 感知在两种模式里完全不同</strong>——这是双模式产品必须面对的数值分裂。</p>
+      <h2 class="doc-h2">4. 系统拆解</h2>
+      <h3 class="doc-h3">4.1 干员系统（4 职业 × 14+ 干员）</h3>
+      <p>玩家扮演全球反恐特勤组 <strong>G.T.I.</strong> 的精英干员，对抗 <strong>哈夫克（Havoc）公司</strong>；部分干员属阿萨拉阵营（如比特）。</p>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td>职业</td><td>定位</td><td>代表干员</td><td>技能数值维度</td></tr>
+      <tr><td><strong>突击</strong></td><td>灵活突破/收割，多段位移，抓TIMING能力强</td><td>红狼、威龙、无名、疾风</td><td>位移速度、技能 CD、爆发窗口、击杀刷新技能</td></tr>
+      <tr><td><strong>侦察</strong></td><td>信息获取、压制/控场</td><td>露娜、银翼、骇爪、回响</td><td>标记范围/时长、侦测半径、干扰强度</td></tr>
+      <tr><td><strong>支援</strong></td><td>续航/救援</td><td>蜂医、蝶、蛊</td><td>治疗量/治疗速率、救援速度倍率、负面状态清除</td></tr>
+      <tr><td><strong>工程</strong></td><td>防御/控场</td><td>牧羊人、深蓝、乌鲁鲁、比特、液氮</td><td>减益强度（如声波减射速）、护盾减伤、陷阱 CD</td></tr>
+      </table></div>
+      <p><strong>数策视角</strong>：干员技能是「基本枪械数值之外的第二套强度轴」。设计难点在于——<strong>技能强度不能与枪械 TTK 失衡</strong>。例如蜂医激素枪的治疗量若过高，会让「对枪劣势」被「续航优势」抹平；牧羊人声波减敌方射速的比例若过大，会让工程位变成「软控王」。这类数值需要独立的平衡预算（budget），和武器数值解耦调参。</p>
+      <h3 class="doc-h3">4.2 武器系统（我们已抓真值）</h3>
+      <p>官方 Wiki 接口可抓到全部武器基础数值，具体见附表中提取了 <strong>50 把枪</strong><strong>的精确数值。</strong></p>
+      <p>按 7 大类分布：突击步枪 17 / DMR 射手 7 / 冲锋枪 9 / 狙击 4 / 轻机 3 / 霰弹 3 / 手枪 7。</p>
+      <p>
+      每把枪的数值字段（官方字段名）：</p>
+      <p>meatHarm 肉伤（=界面「基础伤害」，打无甲躯干单发）</p>
+      <p>armorHarm 甲伤（打有甲部位扣护甲耐久）</p>
+      <p>fireSpeed 射速（RPM）</p>
+      <p>shootDistance 优势射程</p>
+      <p>muzzleVelocity 初速</p>
+      <p>capacity 弹容；recoil/control/stable/hipShot 后坐/操控/稳定/腰射</p>
+      <p>caliber 口径；ammo[] 可用弹药；fireMode 射击模式</p>
+      <p>此外，横向榜单（肉伤 TOP10 / 理论 DPS TOP10 / 射速 TOP10）已在文档中给出。</p>
+      <h3 class="doc-h3">4.3 护甲 / 装备系统</h3>
+      <p>烽火地带：<strong>护甲有耐久</strong>，穿戴后提供减伤，被甲伤打中扣耐久，耐久归零失效，需维修。</p>
+      <p>护甲分级+ 弹药穿甲分级 → 决定「肉伤渗漏率」。</p>
+      <p>这部分<strong>官方只公开肉伤/甲伤，未公开部位倍率、穿甲渗漏率、距离衰减系数的精确公式</strong>——是社区实测补的近似模型。</p>
+      <h3 class="doc-h3">4.4 经济系统（烽火地带核心）</h3>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td>要素</td><td>说明</td><td>数策关注点</td></tr>
+      <tr><td>哈夫币</td><td>游戏内通用货币</td><td>入口（掉落/任务）vs 出口（弹药/维修/交易税）配平</td></tr>
+      <tr><td>曼德尔砖 / 大红（非洲之心等）</td><td>高价值可带出物品</td><td>风险收益曲线的「高尾」设计</td></tr>
+      <tr><td>保险箱 / 保险机制</td><td>部分物资死亡可保留</td><td>死亡惩罚的「缓冲系数」</td></tr>
+      <tr><td>交易行</td><td>玩家间交易，带税（玩家反馈约 15%）</td><td>税收率直接影响流通与通胀</td></tr>
+      <tr><td>黑屋</td><td>行为分匹配（击杀多/死多/撤离多进「黑屋」）</td><td>匹配算法的行为权重设计</td></tr>
+      </table></div>
+      <h3 class="doc-h3">4.5 进度 / 养成</h3>
+      <p>干员解锁（活动/通行证）、武器改装（配件树）、赛季通行证、战令。</p>
+      <p>改装系统 = 配件对基础数值的<strong>乘区/加区</strong>设计（后坐、操控、射程、初速等），是武器数值的「二阶调参面」。</p>
+      <h2 class="doc-h2">5. 数值设计维度（重点章）</h2>
+      <h3 class="doc-h3">5.1 武器 TTK 框架</h3>
+      <p>TTK（击杀耗时）≈ 敌方有效血量 / (单发肉伤 × 射速/60 × 命中率)。但烽火地带里「有效血量」被护甲耐久和渗漏率扭曲，所以真实 TTK 是：</p>
+      <p>TTK = 破甲耗时(甲伤/护甲耐久) + 破甲后进血耗时(剩余血 / 渗漏后肉伤 / 射速)
+      </p>
+      <p>同一把枪打无甲 vs 打六级甲，击杀发数可差 2–3 倍。这是《三角洲》区别于纯对抗 FPS 的<strong>核心数值张力</strong>。</p>
+      <h3 class="doc-h3">5.2 护甲穿透 / 渗漏模型（近似）</h3>
+      <p>由「弹药穿甲等级 − 护甲防护等级」决定肉伤渗漏率（社区实测近似）：</p>
+      <p>弹 ≥ 甲 +1 级 → 渗漏 ~90–100%</p>
+      <p>同级 → ~70–85%</p>
+      <p>低 1 级 → ~40–60%</p>
+      <p>低 2 级 → ~20–35%</p>
+      <p>官方未公开精确系数，是数值策划上岗后要<strong>自己建表、用实战数据校准</strong>的黑盒。</p>
+      <h3 class="doc-h3">5.3 经济数值（最易被玩家感知、也最易翻车）</h3>
+      <p>搜打撤品类的经济数值决定了「肝度」和「贫富分化」：</p>
+      <p><strong>通胀控制</strong>：哈夫币的产出（掉落/任务/卖货）必须 &lt; 消耗（弹药/维修/税），否则货币贬值、老玩家资产膨胀。玩家反馈已出现「有钱的越来越有钱，穷的越来越穷」的抱怨——这是经济数值失衡的典型信号。</p>
+      <p><strong>爆率曲线</strong>：高价值物（红货/机密）的爆率决定「赌徒盘」吸引力，但断崖式下调会直接伤留存（玩家大量差评指向爆率下滑）。</p>
+      <p><strong>交易税</strong>：既是通胀阀门也是「劝退税」，税率是杠杆。</p>
+      <h3 class="doc-h3">5.4 技能 / 匹配数值</h3>
+      <p>干员技能 CD、减益强度需要独立的「强度预算」。</p>
+      <p>匹配：除 ELO/MMR 外，还叠加<strong>行为分</strong>（击杀/死亡/撤离频率）做分池（黑屋）。这是用数值手段调控生态，但权重设计争议极大（玩家吐槽「杀多了进黑屋」），是数策在「生态治理」上的经典难题。</p>
+      <h3 class="doc-h3">5.5 平衡性方法论</h3>
+      <p>官方公开表述「结合全赛季大数据，对数十款主流枪械的属性、后坐力、适配场景优化，平衡强势枪械出场率，盘活冷门枪」——这是<strong>数据驱动平衡（出场率 / 胜率 / TTK 分布）</strong> 的标准范式，也是数值策划的日常工具链。</p>
+      <h2 class="doc-h2">6. 竞品对比</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td>产品</td><td>搜打撤</td><td>大战场</td><td>干员技能</td><td>引擎/平台</td><td>与三角洲差异</td></tr>
+      <tr><td><strong>三角洲行动</strong></td><td>✅ 烽火地带</td><td>✅ 32v32</td><td>✅ 4 职业</td><td>UE4/5 全平台</td><td>三合一综合体</td></tr>
+      <tr><td>Escape from Tarkov</td><td>✅ 硬核</td><td>❌</td><td>❌</td><td>自研 PC</td><td>无技能/无大战场，学习曲线陡</td></tr>
+      <tr><td>暗区突围 / Arena Breakout</td><td>✅ 手游向</td><td>❌</td><td>❌</td><td>移动端</td><td>腾讯已验证的手游搜打撤，轻量化</td></tr>
+      <tr><td>Battlefield 战地</td><td>❌</td><td>✅ 载具大战场</td><td>❌</td><td>多平台</td><td>无 persistence 经济</td></tr>
+      <tr><td>COD DMZ</td><td>✅ 偏娱乐</td><td>❌</td><td>部分</td><td>多平台</td><td>搜打撤但更休闲、无长线养成</td></tr>
+      <tr><td>Valorant /  apex 类</td><td>❌</td><td>✅ 小队对抗</td><td>✅（英雄）</td><td>PC</td><td>技能驱动但无搜打撤经济</td></tr>
+      </table></div>
+      <p><strong>结论</strong>：三角洲的护城河是「<strong>搜打撤的经济深度 + 大战场的低门槛流量 + 干员技能的信息/控制维度</strong>」三件套，且全平台打通把用户盘子做大。代价是<strong>三套数值体系要分别平衡且不能互相污染</strong>（尤其烽火地带 vs 大战场的护甲公式分裂）。</p>
+      <h2 class="doc-h2">7. 数值策划视角洞察（给面试/作品集的「主见」）</h2>
+      <p><strong>双模式双护甲公式是最大设计挑战</strong>：同一武器在烽火地带（有甲耐久）和大战场（无甲耐久）走不同结算，TTK 感知割裂。理想的数值框架应有一套「统一底层 + 模式开关」，避免两套独立平衡互相打架。</p>
+      <p><strong>经济数值是留存命门</strong>：搜打撤的「入口—出口」配平决定贫富分化。玩家已明确抱怨通胀与爆率下滑——这是数值策划最该建立监控仪表盘（哈夫币流通量、人均资产、红货掉率、交易行换手率）的地方。</p>
+      <p><strong>伤害黑盒要自己建表</strong>：官方只给肉伤/甲伤，部位倍率、渗漏率、距离衰减需社区/内部实测校准。上岗第一件事应是搭一套可复现的伤害测算沙盒。</p>
+      <p><strong>技能强度要独立预算</strong>：干员技能是「第二强度轴」，必须和武器 TTK 解耦调参，否则会出现「技能碾压枪法」的失衡。</p>
+      <p><strong>行为分匹配是双刃剑</strong>：黑屋机制初衷是生态治理，但权重过激会反噬核心玩家体验。匹配算法里行为权重需要 AB 实验谨慎标定。</p>
+      <p><strong>数据驱动平衡是常态</strong>：出场率/胜率/TTK 分布三张表是枪械平衡的日常工作，我们已有的 50 枪真实数值可直接作为这套监控的「基线快照」。</p>
+      <h2 class="doc-h2">8. 数据来源与可复用资产</h2>
+      <p><strong>官方 Wiki 接口（已逆向）</strong>：projectd_oversea/object.list + i18n 语言表，可随版本重跑 extract_deltaforce_weapons.py 刷新 50 枪数值。</p>
+      <p><strong>真实数值基线</strong>：见《三角洲行动_官方Wiki武器数值统计.md / .docx》。</p>
+      <p><strong>伤害模型</strong>：见《三角洲行动_伤害计算与护甲机制详解.md》（含 AS Val 四场景算例）。</p>
+      <p><strong>市场/规模数据</strong>：腾讯财报、WeGame 商店页、SteamDB / PlayerAUctions、百度百科、官方赛季页（第三方报道已注明出处，正式作品集中建议二次核验最新赛季号与 DAU）。</p>
+      <blockquote>⚠️ 注：赛季编号、DAU 峰值等运营数据随时间变化较快，本文引用均标注来源性质；正式投递前建议用最新官方财报/公告复核。</blockquote>
+      <p>附表：</p>
+      <h1 class="doc-h1"><strong>三角洲行动 ·</strong><strong> </strong><strong>武器数值统计</strong></h1>
+      <p>数据来源：官方 Wiki 后端接口 projectd_oversea/object.list ｜  全 50 把武器</p>
+      <h2 class="doc-h2">突击步枪（17 把）</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>武器</strong></td><td><strong>口径</strong></td><td><strong>肉伤</strong></td><td><strong>甲伤</strong></td><td><strong>射速</strong></td><td><strong>射程</strong></td><td><strong>初速</strong></td><td><strong>弹容</strong></td><td><strong>后坐</strong></td><td><strong>操控</strong></td><td><strong>稳定</strong></td><td><strong>腰射</strong></td></tr>
+      <tr><td>ASh-12战斗步枪</td><td>12.7x55mm</td><td>56</td><td>55</td><td>500</td><td>55</td><td>340</td><td>20</td><td>24</td><td>52</td><td>61</td><td>43</td></tr>
+      <tr><td>AKM突击步枪</td><td>7.62x39mm</td><td>40</td><td>42</td><td>600</td><td>40</td><td>525</td><td>30</td><td>39</td><td>54</td><td>55</td><td>53</td></tr>
+      <tr><td>M7战斗步枪</td><td>6.8x51mm</td><td>40</td><td>42</td><td>649</td><td>55</td><td>630</td><td>20</td><td>34</td><td>55</td><td>58</td><td>47</td></tr>
+      <tr><td>SCAR-H战斗步枪</td><td>7.62x51mm</td><td>40</td><td>38</td><td>585</td><td>40</td><td>630</td><td>20</td><td>40</td><td>58</td><td>55</td><td>45</td></tr>
+      <tr><td>G3战斗步枪</td><td>7.62x51mm</td><td>39</td><td>42</td><td>533</td><td>55</td><td>630</td><td>20</td><td>32</td><td>51</td><td>62</td><td>45</td></tr>
+      <tr><td>191式突击步枪</td><td>5.8x42mm</td><td>35</td><td>38</td><td>706</td><td>27</td><td>550</td><td>30</td><td>42</td><td>60</td><td>50</td><td>56</td></tr>
+      <tr><td>AKS-74U突击步枪</td><td>5.45x39mm</td><td>34</td><td>36</td><td>533</td><td>40</td><td>500</td><td>20</td><td>35</td><td>60</td><td>53</td><td>52</td></tr>
+      <tr><td>PTR-32突击步枪</td><td>7.62x39mm</td><td>34</td><td>36</td><td>632</td><td>40</td><td>630</td><td>30</td><td>32</td><td>56</td><td>57</td><td>45</td></tr>
+      <tr><td>M16A4突击步枪</td><td>5.56x45mm</td><td>33</td><td>39</td><td>672</td><td>55</td><td>575</td><td>20</td><td>40</td><td>56</td><td>57</td><td>54</td></tr>
+      <tr><td>K416突击步枪</td><td>5.56x45mm</td><td>29</td><td>32</td><td>880</td><td>27</td><td>575</td><td>30</td><td>44</td><td>61</td><td>52</td><td>57</td></tr>
+      <tr><td>AUG突击步枪</td><td>5.56x45mm</td><td>29</td><td>35</td><td>679</td><td>55</td><td>575</td><td>30</td><td>60</td><td>54</td><td>59</td><td>53</td></tr>
+      <tr><td>AS Val突击步枪</td><td>9x39mm</td><td>29</td><td>48</td><td>972</td><td>27</td><td>330</td><td>15</td><td>43</td><td>62</td><td>51</td><td>57</td></tr>
+      <tr><td>M4A1突击步枪</td><td>5.56x45mm</td><td>27</td><td>32</td><td>800</td><td>40</td><td>575</td><td>30</td><td>41</td><td>58</td><td>55</td><td>55</td></tr>
+      <tr><td>QBZ95-1突击步枪</td><td>5.8x42mm</td><td>27</td><td>42</td><td>679</td><td>55</td><td>575</td><td>30</td><td>52</td><td>55</td><td>58</td><td>54</td></tr>
+      <tr><td>AK-12突击步枪</td><td>5.45x39mm</td><td>27</td><td>41</td><td>735</td><td>40</td><td>575</td><td>30</td><td>48</td><td>57</td><td>56</td><td>54</td></tr>
+      <tr><td>CAR-15突击步枪</td><td>5.56x45mm</td><td>27</td><td>32</td><td>632</td><td>40</td><td>575</td><td>20</td><td>50</td><td>58</td><td>55</td><td>53</td></tr>
+      <tr><td>SG552突击步枪</td><td>5.56x45mm</td><td>22</td><td>30</td><td>906</td><td>55</td><td>575</td><td>20</td><td>46</td><td>61</td><td>52</td><td>53</td></tr>
+      </table></div>
+      <h2 class="doc-h2">射手步枪(DMR)（7 把）</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>武器</strong></td><td><strong>口径</strong></td><td><strong>肉伤</strong></td><td><strong>甲伤</strong></td><td><strong>射速</strong></td><td><strong>射程</strong></td><td><strong>初速</strong></td><td><strong>弹容</strong></td><td><strong>后坐</strong></td><td><strong>操控</strong></td><td><strong>稳定</strong></td><td><strong>腰射</strong></td></tr>
+      <tr><td>SVD狙击步枪</td><td>7.62x54R</td><td>56</td><td>52</td><td>300</td><td>70</td><td>500</td><td>10</td><td>42</td><td>48</td><td>67</td><td>34</td></tr>
+      <tr><td>SR-25射手步枪</td><td>7.62x51mm</td><td>50</td><td>55</td><td>364</td><td>90</td><td>550</td><td>10</td><td>56</td><td>56</td><td>59</td><td>40</td></tr>
+      <tr><td>PSG-1射手步枪</td><td>7.62x51mm</td><td>50</td><td>55</td><td>300</td><td>90</td><td>750</td><td>10</td><td>60</td><td>49</td><td>66</td><td>34</td></tr>
+      <tr><td>SKS射手步枪</td><td>7.62x39mm</td><td>44</td><td>42</td><td>510</td><td>55</td><td>575</td><td>10</td><td>30</td><td>55</td><td>60</td><td>38</td></tr>
+      <tr><td>M14射手步枪</td><td>7.62x51mm</td><td>40</td><td>41</td><td>727</td><td>40</td><td>575</td><td>10</td><td>26</td><td>58</td><td>55</td><td>48</td></tr>
+      <tr><td>VSS射手步枪</td><td>9x39mm</td><td>35</td><td>48</td><td>480</td><td>120</td><td>330</td><td>15</td><td>46</td><td>54</td><td>61</td><td>38</td></tr>
+      <tr><td>Mini-14射手步枪</td><td>5.56x45mm</td><td>32</td><td>38</td><td>590</td><td>90</td><td>650</td><td>10</td><td>60</td><td>52</td><td>63</td><td>37</td></tr>
+      </table></div>
+      <h2 class="doc-h2">狙击步枪（4 把）</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>武器</strong></td><td><strong>口径</strong></td><td><strong>肉伤</strong></td><td><strong>甲伤</strong></td><td><strong>射速</strong></td><td><strong>射程</strong></td><td><strong>初速</strong></td><td><strong>弹容</strong></td><td><strong>后坐</strong></td><td><strong>操控</strong></td><td><strong>稳定</strong></td><td><strong>腰射</strong></td></tr>
+      <tr><td>AWM狙击步枪</td><td>.338 LM</td><td>100</td><td>10</td><td>35</td><td>200</td><td>750</td><td>5</td><td>20</td><td>44</td><td>74</td><td>23</td></tr>
+      <tr><td>SV-98狙击步枪</td><td>7.62x54R</td><td>55</td><td>53</td><td>40</td><td>150</td><td>650</td><td>7</td><td>55</td><td>44</td><td>74</td><td>26</td></tr>
+      <tr><td>R93狙击步枪</td><td>7.62x51mm</td><td>55</td><td>53</td><td>50</td><td>150</td><td>550</td><td>10</td><td>55</td><td>52</td><td>66</td><td>28</td></tr>
+      <tr><td>M700狙击步枪</td><td>7.62x51mm</td><td>55</td><td>53</td><td>48</td><td>150</td><td>650</td><td>5</td><td>24</td><td>48</td><td>70</td><td>27</td></tr>
+      </table></div>
+      <h2 class="doc-h2">冲锋枪（9 把）</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>武器</strong></td><td><strong>口径</strong></td><td><strong>肉伤</strong></td><td><strong>甲伤</strong></td><td><strong>射速</strong></td><td><strong>射程</strong></td><td><strong>初速</strong></td><td><strong>弹容</strong></td><td><strong>后坐</strong></td><td><strong>操控</strong></td><td><strong>稳定</strong></td><td><strong>腰射</strong></td></tr>
+      <tr><td>SR-3M紧凑型突击步枪</td><td>9x39mm</td><td>36</td><td>48</td><td>747</td><td>19</td><td>330</td><td>15</td><td>45</td><td>68</td><td>43</td><td>68</td></tr>
+      <tr><td>勇士冲锋枪</td><td>9x19mm</td><td>36</td><td>35</td><td>700</td><td>20</td><td>500</td><td>30</td><td>40</td><td>63</td><td>48</td><td>67</td></tr>
+      <tr><td>SMG-45冲锋枪</td><td>.45 ACP</td><td>35</td><td>40</td><td>605</td><td>27</td><td>500</td><td>25</td><td>52</td><td>70</td><td>41</td><td>65</td></tr>
+      <tr><td>P90冲锋枪</td><td>5.7x28mm</td><td>32</td><td>35</td><td>898</td><td>20</td><td>450</td><td>50</td><td>48</td><td>56</td><td>45</td><td>60</td></tr>
+      <tr><td>Vector冲锋枪</td><td>.45 ACP</td><td>32</td><td>28</td><td>1091</td><td>20</td><td>500</td><td>17</td><td>38</td><td>69</td><td>42</td><td>68</td></tr>
+      <tr><td>野牛冲锋枪</td><td>9x19mm</td><td>32</td><td>35</td><td>659</td><td>20</td><td>500</td><td>32</td><td>43</td><td>62</td><td>49</td><td>63</td></tr>
+      <tr><td>MP5冲锋枪</td><td>9x19mm</td><td>30</td><td>32</td><td>820</td><td>20</td><td>450</td><td>30</td><td>53</td><td>66</td><td>45</td><td>68</td></tr>
+      <tr><td>MP7</td><td>4.6x30mm</td><td>29</td><td>27</td><td>950</td><td>20</td><td>450</td><td>20</td><td>55</td><td>67</td><td>44</td><td>68</td></tr>
+      <tr><td>UZI冲锋枪</td><td>9x19mm</td><td>28</td><td>35</td><td>780</td><td>20</td><td>450</td><td>25</td><td>50</td><td>68</td><td>43</td><td>66</td></tr>
+      </table></div>
+      <h2 class="doc-h2">轻机枪（3 把）</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>武器</strong></td><td><strong>口径</strong></td><td><strong>肉伤</strong></td><td><strong>甲伤</strong></td><td><strong>射速</strong></td><td><strong>射程</strong></td><td><strong>初速</strong></td><td><strong>弹容</strong></td><td><strong>后坐</strong></td><td><strong>操控</strong></td><td><strong>稳定</strong></td><td><strong>腰射</strong></td></tr>
+      <tr><td>M250通用机枪</td><td>6.8x51mm</td><td>55</td><td>53</td><td>550</td><td>40</td><td>600</td><td>125</td><td>45</td><td>38</td><td>50</td><td>55</td></tr>
+      <tr><td>PKM通用机枪</td><td>7.62x54R</td><td>45</td><td>42</td><td>669</td><td>40</td><td>630</td><td>75</td><td>36</td><td>42</td><td>59</td><td>45</td></tr>
+      <tr><td>M249轻机枪</td><td>5.56x45mm</td><td>30</td><td>38</td><td>858</td><td>40</td><td>575</td><td>100</td><td>44</td><td>47</td><td>55</td><td>48</td></tr>
+      </table></div>
+      <h2 class="doc-h2">霰弹枪（3 把）</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>武器</strong></td><td><strong>口径</strong></td><td><strong>肉伤</strong></td><td><strong>甲伤</strong></td><td><strong>射速</strong></td><td><strong>射程</strong></td><td><strong>初速</strong></td><td><strong>弹容</strong></td><td><strong>后坐</strong></td><td><strong>操控</strong></td><td><strong>稳定</strong></td><td><strong>腰射</strong></td></tr>
+      <tr><td>M1014霰弹枪</td><td>12 Gauge</td><td>14</td><td>16</td><td>261</td><td>12</td><td>450</td><td>7</td><td>28</td><td>53</td><td>45</td><td>52</td></tr>
+      <tr><td>M870霰弹枪</td><td>12 Gauge</td><td>14</td><td>16</td><td>74</td><td>12</td><td>400</td><td>6</td><td>26</td><td>57</td><td>41</td><td>49</td></tr>
+      <tr><td>S12K霰弹枪</td><td>12 Gauge</td><td>13</td><td>16</td><td>300</td><td>10</td><td>300</td><td>5</td><td>36</td><td>49</td><td>49</td><td>48</td></tr>
+      </table></div>
+      <h2 class="doc-h2">手枪（7 把）</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>武器</strong></td><td><strong>口径</strong></td><td><strong>肉伤</strong></td><td><strong>甲伤</strong></td><td><strong>射速</strong></td><td><strong>射程</strong></td><td><strong>初速</strong></td><td><strong>弹容</strong></td><td><strong>后坐</strong></td><td><strong>操控</strong></td><td><strong>稳定</strong></td><td><strong>腰射</strong></td></tr>
+      <tr><td>.357左轮</td><td>.357 Magnum</td><td>56</td><td>39</td><td>182</td><td>35</td><td>340</td><td>6</td><td>34</td><td>62</td><td>43</td><td>65</td></tr>
+      <tr><td>沙漠之鹰</td><td>.50 AE</td><td>50</td><td>34</td><td>207</td><td>35</td><td>340</td><td>7</td><td>40</td><td>66</td><td>39</td><td>71</td></tr>
+      <tr><td>M1911</td><td>.45 ACP</td><td>40</td><td>30</td><td>373</td><td>15</td><td>400</td><td>7</td><td>39</td><td>65</td><td>40</td><td>67</td></tr>
+      <tr><td>QSZ92G</td><td>9x19mm</td><td>34</td><td>32</td><td>375</td><td>27</td><td>400</td><td>15</td><td>55</td><td>64</td><td>41</td><td>77</td></tr>
+      <tr><td>93R</td><td>9x19mm</td><td>34</td><td>32</td><td>672</td><td>22</td><td>400</td><td>12</td><td>44</td><td>67</td><td>38</td><td>78</td></tr>
+      <tr><td>G17</td><td>9x19mm</td><td>27</td><td>25</td><td>462</td><td>27</td><td>400</td><td>17</td><td>42</td><td>70</td><td>35</td><td>75</td></tr>
+      <tr><td>G18</td><td>9x19mm</td><td>22</td><td>16</td><td>1172</td><td>10</td><td>400</td><td>17</td><td>30</td><td>62</td><td>43</td><td>67</td></tr>
+      </table></div>
+      <h2 class="doc-h2">关键榜单</h2>
+      <h2 class="doc-h2">单发肉伤 TOP 10</h2>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>排名</strong></td><td><strong>武器</strong></td><td><strong>类别</strong></td><td><strong>肉伤</strong></td><td><strong>甲伤</strong></td></tr>
+      <tr><td>1</td><td>AWM狙击步枪</td><td>狙击步枪</td><td>100</td><td>10</td></tr>
+      <tr><td>2</td><td>ASh-12战斗步枪</td><td>突击步枪</td><td>56</td><td>55</td></tr>
+      <tr><td>3</td><td>SVD狙击步枪</td><td>射手步枪(DMR)</td><td>56</td><td>52</td></tr>
+      <tr><td>4</td><td>.357左轮</td><td>手枪</td><td>56</td><td>39</td></tr>
+      <tr><td>5</td><td>M250通用机枪</td><td>轻机枪</td><td>55</td><td>53</td></tr>
+      <tr><td>6</td><td>SV-98狙击步枪</td><td>狙击步枪</td><td>55</td><td>53</td></tr>
+      <tr><td>7</td><td>R93狙击步枪</td><td>狙击步枪</td><td>55</td><td>53</td></tr>
+      <tr><td>8</td><td>M700狙击步枪</td><td>狙击步枪</td><td>55</td><td>53</td></tr>
+      <tr><td>9</td><td>SR-25射手步枪</td><td>射手步枪(DMR)</td><td>50</td><td>55</td></tr>
+      <tr><td>10</td><td>PSG-1射手步枪</td><td>射手步枪(DMR)</td><td>50</td><td>55</td></tr>
+      </table></div>
+      <h3 class="doc-h3"><strong>自动武器 理论DPS TOP 10（肉伤×射速/60，无甲躯干）</strong></h3>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>排名</strong></td><td><strong>武器</strong></td><td><strong>类别</strong></td><td><strong>肉伤</strong></td><td><strong>射速</strong></td><td><strong>DPS</strong></td></tr>
+      <tr><td>1</td><td>Vector冲锋枪</td><td>冲锋枪</td><td>32</td><td>1091</td><td>582</td></tr>
+      <tr><td>2</td><td>M250通用机枪</td><td>轻机枪</td><td>55</td><td>550</td><td>504</td></tr>
+      <tr><td>3</td><td>PKM通用机枪</td><td>轻机枪</td><td>45</td><td>669</td><td>502</td></tr>
+      <tr><td>4</td><td>M14射手步枪</td><td>射手步枪(DMR)</td><td>40</td><td>727</td><td>485</td></tr>
+      <tr><td>5</td><td>P90冲锋枪</td><td>冲锋枪</td><td>32</td><td>898</td><td>479</td></tr>
+      <tr><td>6</td><td>AS Val突击步枪</td><td>突击步枪</td><td>29</td><td>972</td><td>470</td></tr>
+      <tr><td>7</td><td>ASh-12战斗步枪</td><td>突击步枪</td><td>56</td><td>500</td><td>467</td></tr>
+      <tr><td>8</td><td>MP7</td><td>冲锋枪</td><td>29</td><td>950</td><td>459</td></tr>
+      <tr><td>9</td><td>SR-3M紧凑型突击步枪</td><td>冲锋枪</td><td>36</td><td>747</td><td>448</td></tr>
+      <tr><td>10</td><td>M7战斗步枪</td><td>突击步枪</td><td>40</td><td>649</td><td>433</td></tr>
+      </table></div>
+      <h3 class="doc-h3"><strong>射速 TOP 10</strong></h3>
+      <div class="table-wrap"><table class="doc-table">
+      <tr><td><strong>排名</strong></td><td><strong>武器</strong></td><td><strong>类别</strong></td><td><strong>射速</strong></td><td><strong>肉伤</strong></td></tr>
+      <tr><td>1</td><td>G18</td><td>手枪</td><td>1172</td><td>22</td></tr>
+      <tr><td>2</td><td>Vector冲锋枪</td><td>冲锋枪</td><td>1091</td><td>32</td></tr>
+      <tr><td>3</td><td>AS Val突击步枪</td><td>突击步枪</td><td>972</td><td>29</td></tr>
+      <tr><td>4</td><td>MP7</td><td>冲锋枪</td><td>950</td><td>29</td></tr>
+      <tr><td>5</td><td>SG552突击步枪</td><td>突击步枪</td><td>906</td><td>22</td></tr>
+      <tr><td>6</td><td>P90冲锋枪</td><td>冲锋枪</td><td>898</td><td>32</td></tr>
+      <tr><td>7</td><td>K416突击步枪</td><td>突击步枪</td><td>880</td><td>29</td></tr>
+      <tr><td>8</td><td>M249轻机枪</td><td>轻机枪</td><td>858</td><td>30</td></tr>
+      <tr><td>9</td><td>MP5冲锋枪</td><td>冲锋枪</td><td>820</td><td>30</td></tr>
+      <tr><td>10</td><td>M4A1突击步枪</td><td>突击步枪</td><td>800</td><td>27</td></tr>
+      </table></div>
+      <p>说明：以上为官方公开面板数值，代表基础裸枪属性（未含配件）。“肉伤”为对无甲躯干的单发伤害；对有甲部位的实际穿透伤害由弹药穿甲等级与护甲等级决定，详见《伤害计算与护甲机制详解》。“理论DPS”仅按 肉伤×射速 估算，未计后坐力、爆头倍率与距离衰减，仅供横向排序参考。</p>
+    </article>
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="year"></span> 李俊彦 · 个人求职主页</p>
+    </div>
+  </footer>
+  <script src="assets/script.js"></script>
+</body>
+</html>

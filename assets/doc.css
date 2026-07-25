@@ -1,0 +1,23 @@
+/* ------------------------------------------------------------------
+   文档正文样式（简历 / 拆解报告）
+   ------------------------------------------------------------------ */
+article.doc { max-width: 800px; margin: 40px auto 0; padding: 0 0 60px; }
+article.doc .doc-h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin: 0 0 18px; color: var(--text); }
+article.doc .doc-h2 { font-size: 1.35rem; font-weight: 700; margin: 36px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--text); color: var(--text); }
+article.doc .doc-h3 { font-size: 1.15rem; font-weight: 700; margin: 24px 0 8px; color: var(--text); }
+article.doc .doc-h4 { font-size: 1rem; font-weight: 700; margin: 18px 0 6px; color: var(--text); }
+article.doc p { margin: 12px 0; color: var(--muted); line-height: 1.8; }
+article.doc .lead { font-size: 1.1rem; color: var(--text); font-weight: 600; }
+article.doc ul.doc-ul { list-style: none; margin: 12px 0; padding-left: 0; }
+article.doc ul.doc-ul li { position: relative; padding-left: 20px; margin: 8px 0; color: var(--muted); }
+article.doc ul.doc-ul li::before { content: ""; position: absolute; left: 4px; top: 11px; width: 6px; height: 6px; background: var(--text); border-radius: 1px; }
+article.doc blockquote { margin: 16px 0; padding: 14px 18px; background: var(--surface-2); border-left: 3px solid var(--text); color: var(--muted); font-size: 0.95rem; border-radius: 0 8px 8px 0; }
+article.doc figure { margin: 18px 0; text-align: center; }
+article.doc figure img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 10px; background: #fff; }
+article.doc .caption { font-size: 0.85rem; color: var(--muted); text-align: center; margin: 6px 0 18px; }
+.table-wrap { margin: 16px 0; overflow-x: auto; }
+table.doc-table { border-collapse: collapse; width: 100%; font-size: 0.9rem; background: var(--surface); }
+table.doc-table td { border: 1px solid var(--border); padding: 8px 10px; color: var(--muted); vertical-align: top; }
+table.doc-table tr:first-child td { background: var(--surface-2); font-weight: 700; color: var(--text); }
+/* 文档页返回首页链接在移动端不折叠 */
+@media (max-width: 860px) { .nav__links { transform: none; position: static; box-shadow: none; border: none; } .nav__burger { display: none; } }
