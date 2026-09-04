@@ -51,7 +51,7 @@
         if (en.isIntersecting) {
           var id = en.target.id;
           navAs.forEach(function (a) {
-            a.style.color = a.getAttribute("href") === "#" + id ? "var(--text)" : "";
+            a.style.color = a.getAttribute("href") === "#" + id ? "var(--nav-active)" : "";
           });
         }
       });

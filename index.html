@@ -34,27 +34,26 @@
 
   <!-- 首页 Hero -->
   <section class="hero" id="home">
-    <div class="hero__bg" aria-hidden="true"></div>
     <div class="hero__inner reveal">
-      <div class="hero__avatar" aria-hidden="true">李俊彦</div>
-      <p class="hero__eyebrow">🎓 上海交通大学 · 自动化与感知学院 · 智能感知专业 · 2027届</p>
+      <p class="hero__eyebrow">上海交通大学 · 自动化与感知学院 · 智能感知专业 · 2027届</p>
+      <h1 class="hero__title">李俊彦</h1>
+      <p class="hero__sub">游戏数值策划候选人</p>
       <p class="hero__lead">
         数学建模 + 编程底子扎实，独立拆解过《杀戮尖塔2》与《三角洲行动》数值系统，也做过传感器智能补偿项目。
         正在寻找 <strong>游戏策划（数值方向）</strong> 的暑期实习与 2027 届校招机会。
       </p>
       <div class="hero__cta">
         <a href="#projects" class="btn btn--primary">查看项目作品</a>
-        <a href="#design" class="btn btn--ghost">数值策划作品 →</a>
-        <a href="resume.html" class="btn btn--outline">查看简历</a>
+        <a href="#design" class="btn btn--ghost">数值策划作品</a>
+        <a href="resume.html" class="link-arrow">查看简历 ↗</a>
       </div>
-      
     </div>
-    <a href="#about" class="hero__scroll" aria-label="向下滚动">↓</a>
   </section>
 
   <!-- 关于 -->
   <section class="section" id="about">
     <div class="container">
+      <p class="section__eyebrow reveal">About</p>
       <h2 class="section__title reveal">关于我</h2>
       <div class="about">
         <div class="about__text reveal">
@@ -72,22 +71,22 @@
         </div>
         <div class="about__cards reveal">
           <div class="mini-card">
-            <div class="mini-card__icon">📐</div>
+            <div class="mini-card__icon">01</div>
             <h3>数值建模</h3>
             <p>成长曲线、经济系统、战斗公式、DPE 平衡分析</p>
           </div>
           <div class="mini-card">
-            <div class="mini-card__icon">💻</div>
+            <div class="mini-card__icon">02</div>
             <h3>工程实现</h3>
             <p>Python / C++ / MATLAB，能独立写代码验证想法</p>
           </div>
           <div class="mini-card">
-            <div class="mini-card__icon">🎮</div>
+            <div class="mini-card__icon">03</div>
             <h3>游戏理解</h3>
             <p>系统/数值/战斗拆解，深度体验多品类游戏</p>
           </div>
           <div class="mini-card">
-            <div class="mini-card__icon">📊</div>
+            <div class="mini-card__icon">04</div>
             <h3>数据驱动</h3>
             <p>用数据说话，配置表 + 自动化测试思维</p>
           </div>
@@ -97,8 +96,9 @@
   </section>
 
   <!-- 项目 -->
-  <section class="section" id="projects">
+  <section class="section section--alt" id="projects">
     <div class="container">
+      <p class="section__eyebrow reveal">Portfolio</p>
       <h2 class="section__title reveal">项目作品</h2>
       <p class="section__sub reveal">技术项目证明工程与分析能力 · 数值作品证明游戏设计落地能力</p>
       <div class="projects">
@@ -115,7 +115,7 @@
         </article>
 
         <article class="card reveal card--highlight">
-          <div class="card__tag card__tag--design">数值作品 ⭐</div>
+          <div class="card__tag card__tag--design">数值作品</div>
           <h3>《杀戮尖塔2》战士数值拆解</h3>
           <p class="card__desc">关注卡牌游戏中最重要的数值机制系统；建立「费用 × 稀有度 × 效果」三维定价模型，锚定 1 能量 ≈ 6 伤害 ≈ 5 格挡 ≈ 1 抽牌；逐张核算 87 张战士卡牌数值当量，识别乘性崩坏节点。</p>
           <div class="card__stack">
@@ -132,7 +132,7 @@
         </div>
 
         <article class="card reveal card--highlight">
-          <div class="card__tag card__tag--design">数值作品 ⭐</div>
+          <div class="card__tag card__tag--design">数值作品</div>
           <h3>《三角洲行动》搜打撤及数值系统拆解</h3>
           <p class="card__desc">拆解「搜-打-撤」核心循环与风险-收益「不可能三角」；建立武器 TTK 锚定模型与「穿透值 vs 护甲等级」护甲系数矩阵，解析哈夫币经济的入口/出口平衡与赛季通货膨胀。</p>
           <div class="card__stack">
@@ -144,7 +144,7 @@
         </article>
 
         <article class="card reveal card--highlight">
-          <div class="card__tag card__tag--design">数值作品 ⭐</div>
+          <div class="card__tag card__tag--design">数值作品</div>
           <h3>《三角洲行动》三无名 QCQ 修脚泛滥 · 乘性崩坏启示</h3>
           <p class="card__desc">拆解 S10 赛季航天基地「修脚流」成为版本答案的成因：护甲盲区、175% 修脚弹、QCQ 单发 25 取整 4 枪倒地、近距离地图与无名干员，五项「各自合理」的设计相乘后失控。给出克制链、取整坑、乘性验证等可复用的数值结论。</p>
           <div class="card__stack">
@@ -169,9 +169,10 @@
       </div>
     </section>
 
-  <!-- 数值作品专版 -->
-  <section class="section section--alt" id="design">
+  <!-- 数值作品专版 · 深色 tile -->
+  <section class="section section--dark" id="design">
     <div class="container">
+      <p class="section__eyebrow reveal">Design Works</p>
       <h2 class="section__title reveal">数值策划作品 · 专版</h2>
       <div class="design">
         <div class="design__item reveal">
@@ -204,7 +205,7 @@
         </div>
       </div>
       <div class="design__cta reveal">
-        <a href="#projects" class="btn btn--outline">查看项目作品</a>
+        <a href="#projects" class="btn btn--primary">查看项目作品</a>
       </div>
     </div>
   </section>
@@ -212,9 +213,9 @@
   <!-- 简历 -->
   <section class="section" id="resume">
     <div class="container container--narrow">
+      <p class="section__eyebrow reveal">Resume</p>
       <h2 class="section__title reveal">简历</h2>
       <div class="resume-box reveal">
-        <div class="resume-box__icon">📄</div>
         <h3>数值策划实习 / 校招简历</h3>
         <div class="resume-box__actions">
           <a href="resume.html" class="btn btn--primary">查看简历</a>
@@ -227,25 +228,26 @@
   <!-- 联系 -->
   <section class="section section--alt" id="contact">
     <div class="container container--narrow">
+      <p class="section__eyebrow reveal">Contact</p>
       <h2 class="section__title reveal">联系我</h2>
-      <p class="section__sub reveal">欢迎实习 / 校招的内推与沟通 🙌</p>
+      <p class="section__sub reveal">欢迎实习 / 校招的内推与沟通</p>
       <div class="contact reveal">
         <a class="contact__item" href="mailto:1810632978@qq.com">
-          <span class="contact__ic">✉️</span>
+          <span class="contact__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3 7.5 9 6 9-6"/></svg></span>
           <span><strong>邮箱</strong><br/>1810632978@qq.com</span>
         </a>
         <a class="contact__item" href="tel:17823909545">
-          <span class="contact__ic">📞</span>
+          <span class="contact__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
           <span><strong>电话</strong><br/>178 2390 9545</span>
         </a>
-        </div>
+      </div>
     </div>
   </section>
 
   <footer class="footer">
     <div class="container">
       <p>© <span id="year"></span> 李俊彦 · 个人求职主页</p>
-      </div>
+    </div>
   </footer>
 
   <script src="assets/script.js"></script>
