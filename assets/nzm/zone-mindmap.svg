@@ -1,0 +1,171 @@
+<svg viewBox="0 0 1280 772" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>逆战未来 · 局外 BD 乘区思维导图</title>
+<desc>七大独立乘区（武器伤害、暴击伤害、弱点伤害、易伤伤害、元素伤害、射速、物理伤害）相乘构成最终 DPS，每个乘区分支出其影响因子；赛季天赋「机械之舞」作为独立结算块走攻击力伤害通道（ATK=500）。</desc>
+<style>
+  .tt  { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  .h1  { font-size: 21px; font-weight: 700; fill: #141413; }
+  .h2  { font-size: 12px; fill: #6c6a64; }
+  .fml { font-size: 13px; fill: #141413; font-weight: 600; }
+  .zn  { font-size: 13.5px; font-weight: 700; fill: #ffffff; }
+  .zd  { font-size: 11.5px; font-weight: 600; fill: #ffffff; }
+  .num { font-size: 11px; font-weight: 700; fill: rgba(255,255,255,0.75); }
+  .f   { font-size: 11px; fill: #4a4844; }
+  .fk  { font-size: 11px; fill: #141413; font-weight: 600; }
+  .fg  { font-size: 10.5px; fill: #86837c; }
+  .mul { font-size: 13px; font-weight: 700; fill: #a9583e; }
+  .bb  { font-size: 12px; fill: #141413; }
+  .bh  { font-size: 13px; font-weight: 700; fill: #ffffff; }
+  .ft  { font-size: 11px; fill: #86837c; }
+</style>
+
+<rect width="1280" height="772" fill="#faf9f5"/>
+
+<!-- ============ 标题 ============ -->
+<text x="40" y="36" class="h1 tt">逆战未来 · 局外 BD 数值拆解 · 乘区思维导图</text>
+<text x="40" y="58" class="h2 tt">僵尸猎场玩法 · 主线 = 七大独立乘区串联相乘；赛季天赋作为独立结算块并入</text>
+
+<rect x="40" y="72" width="1200" height="34" rx="8" fill="#f5f0e8" stroke="#e6dfd8"/>
+<text x="56" y="94" class="fml tt">最终 DPS ＝ ①武器伤害 <tspan fill="#a9583e">×</tspan> ②暴击伤害 <tspan fill="#a9583e">×</tspan> ③弱点伤害 <tspan fill="#a9583e">×</tspan> ④易伤伤害 <tspan fill="#a9583e">×</tspan> ⑤元素伤害 <tspan fill="#a9583e">×</tspan> ⑥射速 <tspan fill="#a9583e">×</tspan> ⑦物理伤害 <tspan fill="#a9583e">＋</tspan> 赛季天赋（独立结算块 · 攻击力伤害通道 ATK=500）</text>
+
+<!-- ============ ROW 1 · ① 武器伤害 ============ -->
+<rect x="40" y="126" width="282" height="38" rx="8" fill="#534AB7"/>
+<text x="54" y="141" class="num tt">① 条件*</text>
+<text x="54" y="157" class="zn tt">武器伤害</text>
+<rect x="40" y="164" width="282" height="196" rx="0" fill="#ffffff" stroke="#e6dfd8"/>
+<rect x="40" y="164" width="282" height="196" rx="8" fill="none" stroke="#e6dfd8" stroke-dasharray="0"/>
+<text x="54" y="188" class="f tt">加幅 ＋ 直击 ＋ 爆炸（同池加法）</text>
+<text x="54" y="208" class="fk tt">· 过载膛压  +10%/层 × 3</text>
+<text x="54" y="224" class="fg tt">  每连续射击 30 发叠 1 层，换弹清空</text>
+<text x="54" y="244" class="fk tt">· 层积强袭  +5.5%/层 × 5</text>
+<text x="54" y="260" class="fg tt">  命中同元素异常目标，理想化取满层</text>
+<text x="54" y="280" class="fk tt">· 异态共鸣  +25%（理想化常驻）</text>
+<text x="54" y="300" class="fk tt">· 火力宣泄：本次伤害 +200%（×3）</text>
+<text x="54" y="320" class="fk tt">理想池上限 = 1 + 0.825 = 1.825</text>
+<text x="54" y="340" class="fg tt">注：龙炎弹爆炸伤害无法暴击</text>
+
+<text x="331" y="150" class="mul tt" text-anchor="middle">×</text>
+
+<!-- ============ ROW 1 · ② 暴击伤害 ============ -->
+<rect x="346" y="126" width="282" height="38" rx="8" fill="#D4537E"/>
+<text x="360" y="141" class="num tt">② 条件*</text>
+<text x="360" y="157" class="zn tt">暴击伤害</text>
+<rect x="346" y="164" width="282" height="196" rx="8" fill="#ffffff" stroke="#e6dfd8"/>
+<text x="360" y="188" class="f tt">复合式：1 + CR_eff × CD_eff</text>
+<text x="360" y="208" class="fk tt">· 单发基础 40（绝对值）</text>
+<text x="360" y="226" class="fk tt">· 爆击 52（绝对值）</text>
+<text x="360" y="244" class="fg tt">  → 基础爆击倍率 = 52/40 = 1.30</text>
+<text x="360" y="264" class="fk tt">· CR_base = 未知数 c（保留符号入式）</text>
+<text x="360" y="284" class="fk tt">· 稳赢之手  +8% 暴击伤害</text>
+<text x="360" y="304" class="fk tt">· 概率坍缩：未暴击 +6% CR</text>
+<text x="360" y="320" class="fg tt">  暴击后清空，高射速连射累积更快</text>
+<text x="360" y="340" class="fg tt">已排除：裁决充能（属副武器插件）</text>
+
+<text x="637" y="150" class="mul tt" text-anchor="middle">×</text>
+
+<!-- ============ ROW 1 · ③ 弱点伤害 ============ -->
+<rect x="652" y="126" width="282" height="38" rx="8" fill="#378ADD"/>
+<text x="666" y="141" class="num tt">③ 条件*</text>
+<text x="666" y="157" class="zn tt">弱点伤害</text>
+<rect x="652" y="164" width="282" height="196" rx="8" fill="#ffffff" stroke="#e6dfd8"/>
+<text x="666" y="188" class="f tt">独立乘区：1 + Σ(弱点增伤)</text>
+<text x="666" y="208" class="fk tt">· 精密追击  +7%/层 × 6 = +42%</text>
+<text x="666" y="228" class="fk tt">· 穿颅者 II（活动卡牌）+7%</text>
+<text x="666" y="248" class="fg tt">  两者同池加法</text>
+<text x="666" y="272" class="fk tt">触发条件（严苛）：</text>
+<text x="666" y="290" class="fg tt">  连续命中 2 枪弱点后才开始生效</text>
+<text x="666" y="306" class="fg tt">  一旦未命中弱点，层数立即中断</text>
+<text x="666" y="332" class="fg tt">设计含义：高风险高回报的精准奖励</text>
+
+<text x="943" y="150" class="mul tt" text-anchor="middle">×</text>
+
+<!-- ============ ROW 1 · ④ 易伤伤害 ============ -->
+<rect x="958" y="126" width="282" height="38" rx="8" fill="#D85A30"/>
+<text x="972" y="141" class="num tt">④ 条件*</text>
+<text x="972" y="157" class="zn tt">易伤伤害</text>
+<rect x="958" y="164" width="282" height="196" rx="8" fill="#ffffff" stroke="#e6dfd8"/>
+<text x="972" y="188" class="f tt">目标侧：1 + Σ(目标受伤提升)</text>
+<text x="972" y="208" class="fk tt">· 切换易伤  +10%</text>
+<text x="972" y="224" class="fg tt">  首发命中触发，持续 6s / 冷却 30s</text>
+<text x="972" y="244" class="fk tt">· 点金破绽  +30%</text>
+<text x="972" y="260" class="fg tt">  点金弹命中施加，受任意武器伤害提升</text>
+<text x="972" y="280" class="fk tt">· 电弧·感电（数值未知，入式）</text>
+<text x="972" y="302" class="fk tt">副武器爆炸后两段同时触发 → +40%</text>
+<text x="972" y="320" class="fg tt">  窗口期易伤 1.40 → 1.50（×1.071）</text>
+
+<!-- ============ 折行指引 ============ -->
+<text x="1220" y="176" class="mul tt" text-anchor="middle">×</text>
+<text x="1224" y="330" class="fg tt" text-anchor="end">串行 ↓</text>
+
+<!-- ============ ROW 2 · ⑤ 元素伤害 ============ -->
+<rect x="40" y="382" width="282" height="38" rx="8" fill="#1D9E75"/>
+<text x="54" y="397" class="num tt">⑤ 条件*</text>
+<text x="54" y="413" class="zn tt">元素伤害</text>
+<rect x="40" y="420" width="282" height="196" rx="8" fill="#ffffff" stroke="#e6dfd8"/>
+<text x="54" y="444" class="f tt">物理基础 ＋ 四元素形态</text>
+<text x="54" y="464" class="fk tt">· 四形态：灼烧 / 冰缓 / 感电 / 溶解</text>
+<text x="54" y="484" class="fk tt">· 元素异常层数机制（最高 5 层）</text>
+<text x="54" y="504" class="fk tt">· 坍缩奇点  24% ＋ 100%/层</text>
+<text x="54" y="524" class="fk tt">· 技能扩散  53%</text>
+<text x="54" y="548" class="fk tt">建模处理：以 Y（绝对伤害/秒）替代</text>
+<text x="54" y="566" class="fg tt">  Y 不吃任何乘区，直接叠加</text>
+<text x="54" y="588" class="fg tt">元素相关插件的加幅计入武器伤害池</text>
+
+<text x="331" y="406" class="mul tt" text-anchor="middle">×</text>
+
+<!-- ============ ROW 2 · ⑥ 射速 ============ -->
+<rect x="346" y="382" width="282" height="38" rx="8" fill="#5F5E5A"/>
+<text x="360" y="397" class="num tt">⑥ 常驻</text>
+<text x="360" y="413" class="zn tt">射速</text>
+<rect x="346" y="420" width="282" height="196" rx="8" fill="#ffffff" stroke="#e6dfd8"/>
+<text x="360" y="444" class="f tt">实际射速 = RPM × 换弹/充能修正</text>
+<text x="360" y="464" class="fk tt">· 主武器 1000 RPM → 16.67 发/s</text>
+<text x="360" y="484" class="fk tt">· 副武器 230 RPM</text>
+<text x="360" y="504" class="fg tt">  换算口径：1000 / 230 = RPM</text>
+<text x="360" y="528" class="fk tt">双重收益（关键乘性放大点）：</text>
+<text x="360" y="546" class="fg tt">  ① 直接乘主武器 DPS</text>
+<text x="360" y="562" class="fg tt">  ② 提升赛季天赋触发密度</text>
+<text x="360" y="578" class="fg tt">     （绚烂烟火 / 死神时刻 / 完美谢幕）</text>
+<text x="360" y="600" class="fg tt">→ 射速词条需警惕双重放大失控</text>
+
+<text x="637" y="406" class="mul tt" text-anchor="middle">×</text>
+
+<!-- ============ ROW 2 · ⑦ 物理伤害 ============ -->
+<rect x="652" y="382" width="282" height="38" rx="8" fill="#639922"/>
+<text x="666" y="397" class="num tt">⑦ 常驻</text>
+<text x="666" y="413" class="zn tt">物理伤害</text>
+<rect x="652" y="420" width="282" height="196" rx="8" fill="#ffffff" stroke="#e6dfd8"/>
+<text x="666" y="444" class="f tt">稀有独立乘区（不与武器伤害同池）</text>
+<text x="666" y="464" class="fk tt">· 稳赢之手：物理伤害 +5%</text>
+<text x="666" y="484" class="fg tt">  目前唯一常驻来源</text>
+<text x="666" y="508" class="fk tt">单点边际效率最高（1.74× 武器伤害）</text>
+<text x="666" y="532" class="fk tt">投放含义：池子留空 = 给后续版本留空间</text>
+<text x="666" y="560" class="fg tt">已拍板：物理伤害为单独乘区，不再与</text>
+<text x="666" y="576" class="fg tt">武器伤害加法池合并</text>
+<text x="666" y="600" class="fg tt">其余伤害默认归物理伤害</text>
+
+<!-- ============ 赛季天赋 · 独立结算块 ============ -->
+<rect x="958" y="382" width="282" height="38" rx="8" fill="#181715"/>
+<text x="972" y="397" class="num tt">独立结算块</text>
+<text x="972" y="413" class="zn tt">赛季天赋「机械之舞」</text>
+<rect x="958" y="420" width="282" height="196" rx="8" fill="#252320" stroke="#3a372f"/>
+<text x="972" y="444" class="bh tt">攻击力伤害通道 · ATK = 500</text>
+<text x="972" y="466" class="bb tt" fill="#f0ede6">① 绚烂烟火  60/飞弹（12%）</text>
+<text x="972" y="482" class="ft tt">   每 8 次命中触发，贯穿机械之舞期间</text>
+<text x="972" y="502" class="bb tt" fill="#f0ede6">② 死神时刻  50/发（10%）</text>
+<text x="972" y="518" class="ft tt">   机械之舞结束后持续 15s</text>
+<text x="972" y="538" class="bb tt" fill="#f0ede6">③ 完美谢幕  65/发（13%）</text>
+<text x="972" y="554" class="ft tt">   结束后 0.5s 内发射飞弹</text>
+<text x="972" y="574" class="bb tt" fill="#f0ede6">④ 机械臂重机枪  22 / 26</text>
+<text x="972" y="590" class="ft tt">   绝对伤害，独立于攻击力通道</text>
+<text x="972" y="610" class="ft tt">机械之舞-改：本轮排除，不建模</text>
+
+<!-- ============ 底注 ============ -->
+<rect x="40" y="640" width="1200" height="84" rx="8" fill="#f5f0e8" stroke="#e6dfd8"/>
+<text x="56" y="661" class="fk tt">乘区判定原则：</text>
+<text x="56" y="680" class="f tt">① 按「作用在伤害链哪一环」判定归属，而非按来源名称；② 同乘区先相加（稀释池），跨乘区相乘；</text>
+<text x="56" y="698" class="f tt">③ 触发需前置条件者标 条件*；④ 赛季天赋走 ATK=500 通道，除「武器伤害」外暴击 / 弱点 / 易伤 / 元素 / 物理 / 射速均照常作用。</text>
+<text x="56" y="716" class="fg tt">数值状态标注：已核验 = 来自截图 / 配置实测 · 理想化最优 = 取满层 / 常驻取上限 · 未知数 = 以符号（c / Y）入式，待补图后回填。</text>
+
+<text x="40" y="748" class="ft tt">逆战未来 · 局外 BD 数值拆解专题 · 乘区思维导图（僵尸猎场玩法）</text>
+<text x="1240" y="748" class="ft tt" text-anchor="end">配套：BD-DPS参考模型.xlsx · BD-乘区分类.xlsx</text>
+</svg>

@@ -1,0 +1,71 @@
+<svg viewBox="0 0 680 560" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>NZM 局外 BD 总 DPS 增益曲线时间轴</title>
+<desc>主武器稳态基线、插件近战常驻层、赛季天赋机械之舞层、火力宣泄爆发窗口脉冲、机械之舞结束脉冲叠加后的总 DPS 增益随时间变化，峰值区在爆发窗口与结束脉冲重叠处。</desc>
+<style>
+.tt{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.ax{font-size:11px;fill:#5F5E5A}
+.lbl{font-size:12px;fill:#2C2C2A}
+.hd{font-size:14px;font-weight:500;fill:#2C2C2A}
+</style>
+
+<text x="24" y="26" class="hd tt">总 DPS 增益随时间变化（理想化，c=0.30）</text>
+<text x="24" y="44" class="ax tt">纵轴 = 相对稳态主武器（=1.0）的总增益倍率；各层自下而上依次叠加</text>
+
+<g transform="translate(64,64)">
+  <line x1="0" y1="400" x2="592" y2="400" stroke="#888780" stroke-width="1.2"/>
+  <line x1="0" y1="0" x2="0" y2="400" stroke="#888780" stroke-width="1.2"/>
+
+  <g stroke="#D3D1C7" stroke-width="0.5">
+    <line x1="0" y1="330" x2="592" y2="330"/>
+    <line x1="0" y1="260" x2="592" y2="260"/>
+    <line x1="0" y1="190" x2="592" y2="190"/>
+    <line x1="0" y1="120" x2="592" y2="120"/>
+    <line x1="0" y1="50" x2="592" y2="50"/>
+  </g>
+  <text x="-8" y="404" class="ax tt" text-anchor="end">1.0</text>
+  <text x="-8" y="334" class="ax tt" text-anchor="end">1.5</text>
+  <text x="-8" y="264" class="ax tt" text-anchor="end">2.0</text>
+  <text x="-8" y="194" class="ax tt" text-anchor="end">2.5</text>
+  <text x="-8" y="124" class="ax tt" text-anchor="end">3.0</text>
+  <text x="-8" y="54" class="ax tt" text-anchor="end">3.5</text>
+  <text x="592" y="420" class="ax tt" text-anchor="end">时间轴 →</text>
+
+  <g stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="4 4">
+    <line x1="80" y1="0" x2="80" y2="400"/>
+    <line x1="220" y1="0" x2="220" y2="400"/>
+    <line x1="380" y1="0" x2="380" y2="400"/>
+    <line x1="500" y1="0" x2="500" y2="400"/>
+  </g>
+  <text x="80" y="416" class="ax tt" text-anchor="middle">切枪·副武器爆炸</text>
+  <text x="220" y="416" class="ax tt" text-anchor="middle">机械之舞开启</text>
+  <text x="380" y="416" class="ax tt" text-anchor="middle">爆发窗口(6s)</text>
+  <text x="500" y="416" class="ax tt" text-anchor="middle">机械之舞结束</text>
+
+  <rect x="0" y="0" width="592" height="400" fill="#888780" opacity="0.10"/>
+  <text x="6" y="16" class="lbl tt" fill="#2C2C2A">① 主武器稳态基线 = 1.0（含武器技能）</text>
+
+  <rect x="0" y="0" width="592" height="140" fill="#1D9E75" opacity="0.35"/>
+  <text x="6" y="30" class="lbl tt" fill="#0F6E56">② 插件 ×1.825 + 近战 ×1.05 常驻层</text>
+
+  <rect x="220" y="0" width="360" height="60" fill="#378ADD" opacity="0.45"/>
+  <text x="226" y="16" class="lbl tt" fill="#185FA5">③ 赛季天赋·机械之舞并行层</text>
+
+  <rect x="380" y="0" width="120" height="90" fill="#E24B4A" opacity="0.60"/>
+  <text x="384" y="16" class="lbl tt" fill="#A32D2D">④ 爆发窗口 ×3</text>
+
+  <path d="M80 398 L80 220" stroke="#D85A30" stroke-width="2"/>
+  <circle cx="80" cy="220" r="4" fill="#D85A30"/>
+  <text x="84" y="224" class="lbl tt" fill="#993C1D">副武器爆炸 60×乘区</text>
+
+  <rect x="80" y="0" width="120" height="400" fill="#D85A30" opacity="0.10"/>
+  <text x="80" y="410" class="ax tt" text-anchor="middle" fill="#993C1D">易伤 +40% 窗口(6s)</text>
+
+  <path d="M500 150 L520 40 L540 150" fill="none" stroke="#534AB7" stroke-width="2.5"/>
+  <circle cx="520" cy="40" r="4" fill="#534AB7"/>
+  <text x="546" y="60" class="lbl tt" fill="#3C3489">结束脉冲：死神时刻+完美谢幕</text>
+
+  <rect x="380" y="0" width="120" height="400" fill="#E24B4A" opacity="0.12"/>
+  <line x1="380" y1="0" x2="380" y2="400" stroke="#A32D2D" stroke-width="1.2"/>
+  <text x="500" y="392" class="lbl tt" text-anchor="middle" fill="#A32D2D">峰值区 · 爆发窗口 × 结束脉冲重叠</text>
+</g>
+</svg>
