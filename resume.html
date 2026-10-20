@@ -3,11 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>个人简历 · 李俊彦</title>
-  <meta name="description" content="个人简历 · 李俊彦" />
+  <title>个人简历 · 李俊彦｜游戏数值策划</title>
+  <meta name="description" content="李俊彦，上海交通大学智能感知工程本科，2027届，游戏数值策划方向。个人简历、作品链接及实习经历。" />
   <link rel="stylesheet" href="assets/styles.css" />
   <link rel="stylesheet" href="assets/doc.css" />
   <link rel="icon" href="assets/avatar.svg" type="image/svg+xml" />
+  <style>
+    .resume-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+    .resume-action {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 9px 15px; border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); background: var(--surface);
+      color: var(--text); font: inherit; font-size: .85rem; line-height: 1.5;
+      cursor: pointer; text-decoration: none;
+    }
+    .resume-action:hover { border-color: var(--primary); color: var(--primary-hover); }
+    .resume-action:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+    article.doc .resume-archive-note { margin: 0 0 24px; font-size: .78rem; }
+    article.doc .resume-qr { float: right; width: 88px; margin: 0 0 16px 22px; }
+    article.doc .resume-qr img { display: block; width: 88px; height: 88px; border-radius: 4px; }
+    article.doc .resume-qr figcaption { margin-top: 4px; color: var(--muted); font-size: .7rem; }
+    article.doc .doc-h2 { clear: both; }
+    article.doc .resume-work-link { text-decoration: underline; text-underline-offset: 4px; }
+    article.doc .resume-work-note { font-size: .85rem; }
+    @media (max-width: 520px) {
+      article.doc .resume-qr { width: 72px; margin-left: 12px; }
+      article.doc .resume-qr img { width: 72px; height: 72px; }
+      .resume-action { padding: 8px 11px; font-size: .8rem; }
+    }
+    @media print {
+      @page { size: A4; margin: 14mm 15mm; }
+      html, body { background: #fff !important; color: #161616 !important; }
+      .nav, .footer, .resume-actions, .resume-archive-note, .resume-qr { display: none !important; }
+      main.container { width: 100%; max-width: none; margin: 0; padding: 0; }
+      article.doc { max-width: none; margin: 0; padding: 0; font-size: 10pt; }
+      article.doc .doc-h1 { margin: 0 0 3mm; color: #161616; font-size: 25pt; }
+      article.doc .doc-h2 {
+        margin: 5mm 0 2mm; padding-bottom: 1.5mm; border-color: #777;
+        color: #161616; font-size: 12pt; break-after: avoid;
+      }
+      article.doc .lead { color: #161616; font-size: 11pt; }
+      article.doc p, article.doc ul.doc-ul li {
+        margin: 2mm 0; color: #333; font-size: 9.5pt; line-height: 1.6; orphans: 2; widows: 2;
+      }
+      article.doc ul.doc-ul { margin: 2mm 0; }
+      article.doc ul.doc-ul li::before { top: 8px; width: 4px; height: 4px; background: #333; }
+      article.doc a { color: #161616; }
+      article.doc .resume-work-note { font-size: 8.5pt; }
+      article.doc .doc-note { padding: 2mm 3mm; background: #fff; border-color: #bbb; font-size: 9pt; }
+    }
+  </style>
 </head>
 <body>
   <header class="nav" id="nav">
@@ -27,10 +72,15 @@
   </header>
   <main class="container">
     <article class="doc">
-      <figure><img src="assets/resume/resume_01.png" alt="resume 图1" loading="lazy"/></figure>
-      <h1 class="doc-h1"><strong>李俊彦</strong><strong>                                               </strong></h1>
-      <p class="lead"><strong>求职意向：游戏策划</strong></p>
-      <p>上海交通大学 · 自动化与感知学院 · 智能感知工程　|　27届本科在读</p>
+      <div class="resume-actions" aria-label="简历操作">
+        <button class="resume-action" id="printResume" type="button">打印 / 保存 PDF</button>
+        <a class="resume-action" href="简历_李俊彦_v2.docx" download>归档简历 v2（DOCX）</a>
+      </div>
+      <p class="resume-archive-note">DOCX 为此前归档的原版简历；本页包含更新后的在线信息。</p>
+      <figure class="resume-qr"><img src="assets/resume/resume_01.png" alt="原简历附带二维码" width="88" height="88" loading="lazy"/><figcaption>原简历二维码</figcaption></figure>
+      <h1 class="doc-h1"><strong>李俊彦</strong></h1>
+      <p class="lead"><strong>求职意向：游戏数值策划</strong></p>
+      <p>上海交通大学 · 自动化与感知学院 · 智能感知工程　|　2027届本科在读</p>
       <p>手机 178 2390 9545　|　邮箱 1810632978@qq.com　|    个人网站：personal-site-bbl.pages.dev</p>
       <h2 class="doc-h2"><strong>教育背景</strong></h2>
       <p><strong>上海交通大学 · </strong><strong>自动化与感知</strong><strong>学院 · 智能感知工程</strong></p>
@@ -40,16 +90,18 @@
       <h2 class="doc-h2"><strong>校园经历</strong></h2>
       <ul class="doc-ul"><li><strong>电院青志队：</strong>电子信息与电气工程学院青年志愿者服务队干事(2023-2024)，参与校内外科普、支教与公益活动的组织与执行，协作与统筹能力得到良好锻炼。</li><li><strong>CET-6：</strong>英语六级 608 分，具有熟练的英语书面水平和口语听说能力。</li></ul>
       <h2 class="doc-h2"><strong>作品集</strong></h2>
-      <p><strong>《杀戮尖塔2</strong><strong> 战士</strong><strong>数值拆解》</strong></p>
+      <p class="resume-work-note">以下作品为实习前的自主分析与工具积累，与游戏实习职责分开记录。</p>
+      <p><a class="resume-work-link" href="sts2.html"><strong>《杀戮尖塔2 战士数值拆解》</strong></a></p>
       <p>关注卡牌游戏中最重要的数值机制系统；建立费效比等定价模型；逐张核算 87 张战士卡牌数值当量；识别乘性崩坏节点。</p>
-      <p><strong>《三角洲行动 </strong><strong>搜打撤及数值系统拆解</strong><strong>》</strong><strong>、</strong><strong>系列议题分析及枪械TTK计算网站</strong></p>
+      <p><a class="resume-work-link" href="deltaforce.html"><strong>《三角洲行动 搜打撤及数值系统拆解》</strong></a>、<a class="resume-work-link" href="xiujiao.html"><strong>系列议题分析</strong></a>及<a class="resume-work-link" href="ttk.html"><strong>枪械TTK计算网站</strong></a></p>
       <p>拆解「搜-打-撤」核心循环；对游戏内外的物资、装备、武器系统做数值方向拆解；利用AI生成三角洲各枪械TTK计算展示网站 ；探讨当下三角洲的策划重点议题</p>
-      <p><strong>《</strong><strong>逆战未来 猎场战斗数值拆解</strong><strong>》</strong></p>
+      <p><a class="resume-work-link" href="nzm.html"><strong>《逆战未来 猎场战斗数值拆解》</strong></a></p>
       <p>把局外构筑的全部加成拆成「七大独立乘区相乘」的乘区模型，厘清同池稀释与跨池相乘的边界。推导最优化攻击流程与模型上限，用于校验数值投放是否越过预期天花板。
       </p>
       <h2 class="doc-h2"><strong>项目经历</strong></h2>
       <p><strong>逆战·未来                                                      数值策划实习生                                                            2026.9至今</strong></p>
       <p>主要负责及协助战斗数值方面的计算，包括猎场模式的赛季通用天赋计算、插件数值计算、赛季卡牌计算及生化追击PVP模式的数值设计和计算。</p>
+      <div class="doc-note"><a href="internship.html">查看独立实习页 →</a>：团队协作、建模成长，以及 AI 辅助工具与知识沉淀的方法复盘。</div>
       <p><strong>压力传感器性能智能补偿算法研究</strong><strong>                            实验室实习                                                   2024.6-2024.8</strong></p>
       <p>在学院副教授姜萍萍老师指导下，开展「传感器性能智能补偿方法研究」。</p>
       <p>①数值建模和算法研究：通过全面的性能测试实验，系统评估传感器非线性误差、零点漂移、灵敏度漂移，同时研究传感器温度补偿算法、非线性校正算法、零点漂移跟踪算法等，以提高传感器在复杂环境下的测量精度和稳定性。</p>
@@ -69,5 +121,10 @@
     </div>
   </footer>
   <script src="assets/script.js"></script>
+  <script>
+    document.getElementById("printResume").addEventListener("click", function () {
+      window.print();
+    });
+  </script>
 </body>
 </html>

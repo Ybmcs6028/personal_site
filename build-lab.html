@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="原创虚构战术构筑案例：枚举 27 套方案，通过逐回合期望伤害、边界判定与 A/B 对比解释构筑选择。">
+  <meta name="theme-color" content="#f7f5ef">
+  <title>雾港试炼 · 构筑对比实验室 — 李俊彦</title>
+  <link rel="stylesheet" href="assets/portfolio.css">
+  <link rel="stylesheet" href="assets/case.css">
+  <script src="assets/portfolio.js" defer></script>
+  <script src="assets/build-demo.js" defer></script>
+  <style>
+    .build-lab .case-grid{align-items:start}.build-lab .field{margin-bottom:1.1rem}.build-lab select,.build-lab input{width:100%;min-height:44px}.build-lab .field small{display:block;line-height:1.6;margin-top:.45rem;color:var(--muted,#65716c)}.build-lab .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.build-lab .control-panel h2{margin-top:0}.build-lab .subheading{margin:1.6rem 0 .9rem;padding-top:1.2rem;border-top:1px solid var(--line,#dce0d9);font-size:1rem}.build-lab .action-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}.build-lab .metric strong{display:block;font-size:clamp(1.25rem,2.3vw,1.8rem);line-height:1.3;margin-top:.35rem;letter-spacing:-.025em}.build-lab .metric span{font-size:.78rem;color:var(--muted,#65716c)}.build-lab .metric em{font-size:.75rem;font-style:normal;font-weight:400;margin-left:.2em}.build-lab .result-heading{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap}.build-lab .result-heading h2{margin:0}.build-lab .result-heading .muted{font-size:.8rem}.build-lab .compare-summary{padding:1rem 0;margin:0;line-height:1.8}.build-lab .chart-wrap{margin-top:1rem}.build-lab .chart-wrap svg{display:block;width:100%;height:auto;min-width:0}.build-lab .legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem}.build-lab .legend span{display:inline-flex;align-items:center;gap:.4rem}.build-lab .key{display:inline-block;width:17px;height:3px;background:#225e53}.build-lab .key-b{background:#b76e37}.build-lab .key-target{height:0;background:none;border-top:2px dashed #77807b}.build-lab .comparison-note{margin-top:1rem;font-size:.88rem;line-height:1.8}.build-lab .reason-box{border-top:1px solid var(--line,#dce0d9);margin-top:1rem;padding-top:1rem;line-height:1.8}.build-lab .reason-box p{margin:.5rem 0}.build-lab .table-wrap{overflow:auto;max-width:100%}.build-lab table{border-collapse:collapse;width:100%;font-size:.85rem}.build-lab th,.build-lab td{padding:.75rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line,#dce0d9)}.build-lab th{font-weight:600;white-space:nowrap}.build-lab td.num,.build-lab th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.build-lab #ranking-table{min-width:690px}.build-lab #round-table{min-width:560px}.build-lab .rank-scroll{max-height:475px;border-top:1px solid var(--line,#dce0d9);border-bottom:1px solid var(--line,#dce0d9)}.build-lab .rank-scroll thead{position:sticky;top:0;z-index:1;background:var(--paper,#f8f7f2)}.build-lab tr.is-current{background:rgba(34,94,83,.065)}.build-lab .table-action{font:inherit;cursor:pointer;padding:.35rem .55rem;white-space:nowrap;background:transparent;border:1px solid var(--line,#bdc9c2);border-radius:4px;color:inherit}.build-lab .table-action:hover{border-color:#225e53;color:#225e53}.build-lab .table-action:disabled{cursor:default;opacity:.6}.build-lab .rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}.build-lab .rule-grid h3{font-size:1rem;margin-top:0}.build-lab .rule-grid p,.build-lab .rule-grid li{font-size:.9rem;line-height:1.9}.build-lab .rule-grid ol{padding-left:1.25rem}.build-lab .formula{padding:1rem;background:rgba(34,94,83,.045);border-left:2px solid #225e53;font-size:.85rem;line-height:1.9}.build-lab .rule-table{margin-top:1.1rem}.build-lab .status{min-height:1.4rem;font-size:.85rem}.build-lab .status[data-kind=error]{color:#9d3b2f}.build-lab .field [aria-invalid=true]{border-color:#9d3b2f}.build-lab .export-note{font-size:.75rem;line-height:1.6;margin-bottom:0}.build-lab .section-heading p{margin-bottom:1rem}.build-lab .case-links{display:flex;gap:1.5rem;flex-wrap:wrap;margin:2rem 0 1rem}.build-lab .tag-mini{font-size:.7rem;display:inline-block;margin-left:.5rem;color:var(--accent,#225e53)}.build-lab .small-label{font-size:.8rem;letter-spacing:.04em;color:var(--muted,#65716c)}.build-lab .comparison-heading{margin:1.3rem 0 .5rem;font-size:1rem}.build-lab .result-panel[aria-busy=true]{opacity:.5}.build-lab .case-section{scroll-margin-top:5rem}
+    @media(max-width:760px){.build-lab .rule-grid{grid-template-columns:1fr;gap:1rem}.build-lab .field-row{gap:.7rem}.build-lab .metric-grid{grid-template-columns:1fr 1fr}.build-lab th,.build-lab td{padding:.65rem}.build-lab .action-row .button{flex:1}.build-lab .result-heading{gap:.4rem}}
+    @media(prefers-reduced-motion:reduce){.build-lab *{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳转到正文</a>
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">李俊彦<span> / 游戏数值策划</span></a>
+      <nav aria-label="主导航">
+        <a class="nav-resume" href="resume.html">简历 ↗</a>
+        <a href="index.html">首页</a>
+        <a href="internship.html">实习与成长</a>
+        <a href="growth-lab.html">成长模型</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="container case-main build-lab">
+    <section class="case-intro" aria-labelledby="case-title">
+      <p class="eyebrow">INTERACTIVE CASE / 02</p>
+      <h1 id="case-title">雾港试炼<br>构筑对比实验室</h1>
+      <p class="lead">同一套构筑，为什么换一个目标就不再占优？用 27 个完整组合，把选择理由落到逐回合结算。</p>
+      <p class="notice">原创虚构案例 · 全部场景、规则与参数为演示设计，不对应实际项目配置或上线结果。</p>
+      <div class="case-brief">
+        <p><strong>问题</strong>　多段攻击、单次护甲和装填节奏共同作用，单看面板伤害容易误判。</p>
+        <p><strong>方法</strong>　建立统一结算顺序，枚举 3 × 3 × 3 套构筑，再用同环境 A/B 对照解释差异。</p>
+        <p><strong>交付用途</strong>　用于演示构筑规则设计、阈值检查与可交互的策划沟通工具。</p>
+      </div>
+    </section>
+
+    <noscript><p class="notice">交互推演需要启用 JavaScript。页面下方仍可阅读完整规则与模型边界。</p></noscript>
+
+    <section class="case-grid" aria-label="构筑交互推演">
+      <form class="control-panel" id="build-form" novalidate>
+        <h2>设定一场试炼</h2>
+        <p class="muted">目标静止；每回合先行动，再记录伤害。</p>
+        <div class="field-row">
+          <div class="field">
+            <label for="target-hp">目标生命 / 点</label>
+            <input id="target-hp" name="targetHp" type="number" min="1" max="5000" step="1" value="500" inputmode="decimal" aria-describedby="input-status">
+          </div>
+          <div class="field">
+            <label for="armor">单次护甲 / 点</label>
+            <input id="armor" name="armor" type="number" min="0" max="45" step="1" value="14" inputmode="decimal" aria-describedby="input-status">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="rounds">观察窗口 / 回合</label>
+            <input id="rounds" name="rounds" type="number" min="1" max="12" step="1" value="8" inputmode="numeric" aria-describedby="input-status">
+          </div>
+          <div class="field">
+            <label for="weather">环境</label>
+            <select id="weather" name="weather">
+              <option value="clear">晴朗 · 命中不变</option>
+              <option value="mist" selected>薄雾 · 命中 −10 点</option>
+              <option value="gust">横风 · 命中 −20 点</option>
+            </select>
+          </div>
+        </div>
+        <p class="status" id="input-status" aria-live="polite"></p>
+
+        <h3 class="subheading">A · 当前构筑</h3>
+        <div class="field">
+          <label for="weapon">武器</label>
+          <select id="weapon" name="weapon">
+            <option value="burst" selected>连发弩</option>
+            <option value="heavy">重型弩</option>
+            <option value="precise">定准弩</option>
+          </select>
+          <small id="weapon-detail">每回合 3 次攻击；每次 26 点；基础命中 86%。</small>
+        </div>
+        <div class="field">
+          <label for="module">模组</label>
+          <select id="module" name="module">
+            <option value="scope">校准镜</option>
+            <option value="pierce" selected>破甲槽</option>
+            <option value="boost">增压芯</option>
+          </select>
+          <small id="module-detail">每次攻击忽略 14 点护甲；剩余护甲最低为 0。</small>
+        </div>
+        <div class="field">
+          <label for="tactic">战术</label>
+          <select id="tactic" name="tactic">
+            <option value="rush">抢攻</option>
+            <option value="steady" selected>稳进</option>
+            <option value="ramp">蓄势</option>
+          </select>
+          <small id="tactic-detail">每回合原始伤害 ×1.12。</small>
+        </div>
+
+        <h3 class="subheading">B · 固定对照</h3>
+        <div class="field">
+          <label for="baseline">对照构筑</label>
+          <select id="baseline" name="baseline" aria-describedby="baseline-detail"></select>
+          <small id="baseline-detail">更改目标和环境会同步重算 A/B；B 不跟随 A 的选择变化。</small>
+        </div>
+        <button class="button button-secondary" id="pin-baseline" type="button">将当前 A 设为 B</button>
+        <div class="action-row">
+          <button class="button button-secondary" id="reset-build" type="button">恢复默认</button>
+          <button class="button" id="export-build" type="button">导出演示参数</button>
+        </div>
+        <p class="muted export-note">JSON 仅包含本页虚构参数与 synthetic 标记。</p>
+      </form>
+
+      <div class="result-panel" id="result-panel">
+        <div class="result-heading">
+          <h2>同条件，看差异</h2>
+          <span class="muted" id="scenario-label">8 回合 · 薄雾 · 14 点护甲</span>
+        </div>
+        <p class="compare-summary" id="result-summary" aria-live="polite">正在建立构筑对照…</p>
+        <div class="metric-grid" aria-label="当前构筑结果">
+          <div class="metric"><span>窗口期望伤害</span><strong id="metric-damage">—</strong></div>
+          <div class="metric"><span>预计击败回合</span><strong id="metric-kill">—</strong></div>
+          <div class="metric"><span>有效命中率</span><strong id="metric-accuracy">—</strong></div>
+          <div class="metric"><span>27 组合中的排名</span><strong id="metric-rank">—</strong></div>
+        </div>
+
+        <h3 class="comparison-heading">累计期望伤害</h3>
+        <div class="legend" aria-label="图例">
+          <span><i class="key" aria-hidden="true"></i>A 当前构筑</span>
+          <span><i class="key key-b" aria-hidden="true"></i>B 固定对照</span>
+          <span><i class="key key-target" aria-hidden="true"></i>目标生命</span>
+        </div>
+        <div class="chart-wrap" id="build-chart"></div>
+        <p class="muted comparison-note">图中按练习靶持续结算整个窗口，不在击败后截断。预计击败回合是累计期望值首次达到生命阈值的回合，<strong>不等于实战必胜或平均击败回合</strong>。</p>
+        <div class="reason-box" id="build-explanation"></div>
+      </div>
+    </section>
+
+    <section class="case-section" aria-labelledby="ranking-heading">
+      <div class="section-heading">
+        <p class="eyebrow">01 / COMPLETE ENUMERATION</p>
+        <h2 id="ranking-heading">27 种组合，统一比较口径</h2>
+        <p class="muted">所有组合使用相同目标与环境，不预先删去弱势方案。点击一行的“载入 A”即可查看过程。</p>
+      </div>
+      <div class="field" style="max-width:360px">
+        <label for="objective">排名目标</label>
+        <select id="objective">
+          <option value="defeat" selected>优先达成击败</option>
+          <option value="damage">优先窗口伤害</option>
+        </select>
+        <small id="ranking-method">先比预计击败回合；同回合优先越界溢出更少；未击败方案按窗口伤害排序。</small>
+      </div>
+      <div class="table-wrap rank-scroll" tabindex="0" aria-label="27 种构筑排名，可滚动">
+        <table id="ranking-table">
+          <caption class="sr-only">同一环境下的全部构筑排名</caption>
+          <thead><tr><th class="num">排名</th><th>构筑</th><th class="num">窗口伤害 / 点</th><th class="num">预计击败 / 回合</th><th class="num">溢出或剩余 / 点</th><th>对比</th></tr></thead>
+          <tbody id="ranking-body"></tbody>
+        </table>
+      </div>
+      <p class="muted" id="ranking-note">所有结算使用未四舍五入数值，仅忽略机器精度量级的小数尾差；显示保留 2 位小数。相同的排序值并列。</p>
+    </section>
+
+    <section class="case-section" aria-labelledby="round-heading">
+      <div class="section-heading">
+        <p class="eyebrow">02 / RESOLUTION TRACE</p>
+        <h2 id="round-heading">逐回合，解释差异从哪里来</h2>
+        <p class="muted">重型弩在奇数回合开火、偶数回合装填；战术按自然回合计时，装填不会暂停蓄势。</p>
+      </div>
+      <div class="table-wrap" tabindex="0" aria-label="A/B 逐回合结算表，可横向滚动">
+        <table id="round-table">
+          <caption class="sr-only">A/B 每回合攻击状态、期望伤害与累计伤害</caption>
+          <thead><tr><th>回合</th><th>A 状态</th><th class="num">A 当回合 / 点</th><th class="num">A 累计 / 点</th><th>B 状态</th><th class="num">B 当回合 / 点</th><th class="num">B 累计 / 点</th></tr></thead>
+          <tbody id="round-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="case-section" aria-labelledby="rules-heading">
+      <div class="section-heading">
+        <p class="eyebrow">03 / RULES &amp; BOUNDARIES</p>
+        <h2 id="rules-heading">规则公开，结论有边界</h2>
+      </div>
+      <div class="rule-grid">
+        <div>
+          <h3>同一条结算链</h3>
+          <ol>
+            <li>根据武器节奏，判定本回合开火或装填。</li>
+            <li>原始单次伤害 =（武器伤害 + 模组加值）× 战术倍率。</li>
+            <li>减去有效护甲，每次命中伤害最低为 1 点。</li>
+            <li>乘以本回合攻击次数与有效命中率，累加期望伤害。</li>
+            <li>用未四舍五入的累计值判断是否达到目标生命。</li>
+          </ol>
+          <div class="formula">
+            有效护甲 = max(0，目标护甲 − 模组穿透)<br>
+            有效命中 = clamp(基础命中 − 环境惩罚 + 模组命中，0，1)<br>
+            当回合期望伤害 = 攻击次数 × 有效命中 × max(1，原始单次伤害 − 有效护甲)
+          </div>
+        </div>
+        <div>
+          <h3>适用范围与关键边界</h3>
+          <p>这是独立设计的确定性期望模型。目标静止、不回复、不反击；不包含暴击、状态异常、距离变化或随机连败。所有攻击共享当前构筑的命中率。</p>
+          <p>期望值越过生命线，只是一个构筑比较阈值。真实击败概率与平均击败时间，需要额外建立逐次命中分布或随机模拟，本页不据此推断。</p>
+          <p>窗口内未越过生命线时明确显示“未击败”；无效输入会暂停结果与导出。穿透不会把护甲降为负数，命中率不会超过 100%，蓄势从第 1 回合的 1.00 倍开始。</p>
+          <p>对策划交付的价值是把条件、计算、排序和呈现分开检查，让“推荐哪套”和“为什么推荐”来自同一份规则。</p>
+        </div>
+      </div>
+      <div class="table-wrap rule-table" tabindex="0" aria-label="完整原创规则，可横向滚动">
+        <table>
+          <thead><tr><th>维度</th><th>方案</th><th>演示规则</th><th>预期权衡</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="3">武器</td><td>连发弩</td><td>26 点 × 3 次 / 回合；命中 86%</td><td>多段攻击充分利用单次加值，也会重复承受护甲减免。</td></tr>
+            <tr><td>重型弩</td><td>128 点 × 1 次 / 奇数回合；命中 90%；偶数回合装填</td><td>单发高伤，结算节奏容易受到窗口长度影响。</td></tr>
+            <tr><td>定准弩</td><td>62 点 × 1 次 / 回合；命中 100%</td><td>稳定输出；晴朗时校准镜会触及命中上限。</td></tr>
+            <tr><td rowspan="3">模组</td><td>校准镜</td><td>命中率 +12 个百分点，上限 100%</td><td>低命中环境更易发挥；达到上限后存在溢出。</td></tr>
+            <tr><td>破甲槽</td><td>每次攻击忽略 14 点护甲</td><td>高护甲目标收益更大；无甲时不提供加成。</td></tr>
+            <tr><td>增压芯</td><td>每次原始伤害 +7 点，再参与战术倍率</td><td>偏向多段攻击；与穿透相比要考虑倍率和护甲。</td></tr>
+            <tr><td rowspan="3">战术</td><td>抢攻</td><td>第 1、2 回合 ×1.40，之后 ×1.00</td><td>集中前期伤害，装填回合也会消耗持续时间。</td></tr>
+            <tr><td>稳进</td><td>每回合 ×1.12</td><td>收益平缓，不依赖启动或持续时间。</td></tr>
+            <tr><td>蓄势</td><td>第 r 回合 ×[1 + 0.04 × (r − 1)]；最多观察 12 回合</td><td>长窗口更有利，前期不获得倍率补偿。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">环境惩罚：晴朗 0、薄雾 10、横风 20 个命中百分点。输入范围：生命 1–5000 点、护甲 0–45 点、窗口 1–12 个整数回合。</p>
+    </section>
+    <div class="case-links"><a href="growth-lab.html">继续查看：成长经济案例 →</a><a href="internship.html">返回实习与成长</a></div>
+  </main>
+</body>
+</html>

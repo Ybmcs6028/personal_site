@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="原创虚构工坊成长案例：调整采集与加工时间、成长需求和产能，比较成长节奏与参数敏感性。">
+  <title>成长节奏实验室 · 李俊彦</title>
+  <link rel="stylesheet" href="assets/portfolio.css">
+  <link rel="stylesheet" href="assets/case.css">
+  <script src="assets/portfolio.js" defer></script>
+  <script src="assets/growth-demo.js" defer></script>
+  <style>
+    .growth-demo .preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 10px; }
+    .growth-demo .preset-row button { font: inherit; font-size: .82rem; padding: 8px 10px; }
+    .growth-demo .preset-row button[aria-pressed="true"] { background: #263d37; border-color: #263d37; color: #fff; }
+    .growth-demo .field-error { display: block; min-height: 1.15em; margin-top: 4px; color: #a43222; font-size: .78rem; }
+    .growth-demo .field input[aria-invalid="true"] { border-color: #a43222; }
+    .growth-demo .field small { display: block; margin-top: 5px; font-size: .78rem; line-height: 1.5; }
+    .growth-demo .growth-actions { display: grid; gap: 9px; margin-top: 16px; }
+    .growth-demo .growth-actions .button { width: 100%; }
+    .growth-demo .growth-actions p { margin: 0; font-size: .78rem; line-height: 1.6; }
+    .growth-demo .growth-preset-label { font-size: .78rem; margin: 0 0 20px; }
+    .growth-demo .growth-chart svg { display: block; width: 100%; min-width: 540px; height: auto; }
+    .growth-demo .growth-chart { overflow-x: auto; }
+    .growth-demo .growth-chart text { font-family: inherit; font-size: 12px; fill: #66726d; }
+    .growth-demo .growth-chart .axis-label { fill: #48544e; font-size: 12px; }
+    .growth-demo .growth-chart .grid-line { stroke: #dfe5e0; stroke-width: 1; }
+    .growth-demo .growth-chart .current-curve { fill: none; stroke: #2a6155; stroke-width: 3; stroke-linejoin: round; }
+    .growth-demo .growth-chart .baseline-curve { fill: none; stroke: #87928c; stroke-width: 2.5; stroke-dasharray: 7 5; stroke-linejoin: round; }
+    .growth-demo .growth-chart .target-line { stroke-width: 1.25; stroke-dasharray: 3 5; }
+    .growth-demo .growth-chart .current-target { stroke: #2a6155; }
+    .growth-demo .growth-chart .baseline-target { stroke: #87928c; }
+    .growth-demo .growth-chart .target-label { fill: #2a6155; font-size: 11px; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
+    .growth-demo .growth-chart .baseline-label { fill: #66726d; }
+    .growth-demo .growth-chart .current-dot { fill: #2a6155; stroke: #fff; stroke-width: 2; }
+    .growth-demo .growth-chart .baseline-dot { fill: #87928c; stroke: #fff; stroke-width: 2; }
+    .growth-demo .growth-legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 12px 0 4px; font-size: .8rem; }
+    .growth-demo .growth-legend span { display: inline-flex; gap: 7px; align-items: center; }
+    .growth-demo .growth-legend i { display: inline-block; width: 24px; border-top: 3px solid #2a6155; }
+    .growth-demo .growth-legend .baseline-key { border-color: #87928c; border-top-style: dashed; }
+    .growth-demo .growth-legend .target-key { border-top-width: 2px; border-top-style: dotted; }
+    .growth-demo .growth-caption { margin: 10px 0 0; font-size: .78rem; line-height: 1.65; }
+    .growth-demo .growth-comparison-note { font-size: .8rem; line-height: 1.75; }
+    .growth-demo .growth-insight { padding: 14px 16px; background: #f0f4ef; border-left: 3px solid #2a6155; font-size: .88rem; line-height: 1.8; margin: 20px 0; }
+    .growth-demo .growth-table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+    .growth-demo .growth-table th, .growth-demo .growth-table td { padding: 13px 12px; text-align: left; border-bottom: 1px solid #e0e5df; vertical-align: top; }
+    .growth-demo .growth-table thead th { color: #67726d; font-size: .76rem; font-weight: 600; }
+    .growth-demo .growth-table tbody th { font-weight: 500; }
+    .growth-demo .sensitivity-table { min-width: 510px; }
+    .growth-demo .sensitivity-table td strong, .growth-demo .sensitivity-table td span { display: block; }
+    .growth-demo .sensitivity-table td strong { margin-bottom: 5px; font-weight: 600; }
+    .growth-demo .sensitivity-note { margin-top: 4px; color: #67726d; font-size: .76rem; }
+    .growth-demo .model-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 36px; }
+    .growth-demo .model-grid h3 { font-size: 1rem; margin: 0 0 13px; }
+    .growth-demo .model-grid p, .growth-demo .model-grid li { font-size: .88rem; line-height: 1.85; }
+    .growth-demo .model-grid ul { padding-left: 1.2em; }
+    .growth-demo .formula { padding: 14px 17px; background: #f5f6f2; overflow-x: auto; margin: 12px 0; line-height: 2; font-family: Georgia, "Times New Roman", serif; font-size: 1rem; }
+    .growth-demo .formula div { white-space: nowrap; }
+    .growth-demo .model-symbols { font-size: .8rem !important; color: #67726d; }
+    .growth-demo .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .growth-demo [hidden] { display: none !important; }
+    .growth-demo button:disabled { opacity: .45; cursor: not-allowed; }
+    .growth-demo .metric strong { display: block; }
+    .growth-demo .metric small { display: block; font-size: .76rem; line-height: 1.65; }
+    .growth-demo .growth-scroll-hint { display: none; font-size: .75rem; margin: 4px 0 0; }
+    @media (max-width: 720px) {
+      .growth-demo .model-grid { grid-template-columns: 1fr; gap: 22px; }
+      .growth-demo .growth-scroll-hint { display: block; }
+      .growth-demo .growth-table th, .growth-demo .growth-table td { padding: 11px 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .growth-demo * { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳转到正文</a>
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">李俊彦<span> / 游戏数值策划</span></a>
+      <nav aria-label="主导航">
+        <a class="nav-resume" href="resume.html">简历 ↗</a>
+        <a href="index.html">首页</a>
+        <a href="internship.html">实习与成长</a>
+        <a href="build-lab.html">构筑比较</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container case-main growth-demo" id="main">
+    <section class="case-intro">
+      <p class="eyebrow">INTERACTIVE CASE / 01</p>
+      <h1>成长节奏实验室</h1>
+      <p class="case-lead">一间虚构工坊，如何把每日投入变成可解释的成长节奏？</p>
+      <p class="notice">原创虚构案例 · 全部场景、规则与参数为演示设计，不对应实际项目配置或上线结果。</p>
+      <p>在“雾岛工坊”中，玩家分配时间采集原料、加工订单，以成长点提升工坊等级。本例把时间分配、升级需求与产能反馈放到同一模型，检查何时达标、哪里出现瓶颈，以及改动单个参数会影响多大。</p>
+      <p class="muted">展示用途：讨论成长节奏、比较方案、定位敏感参数。预设与计算结果仅是模型内的演示，不代表用户行为或真实产品收益。</p>
+    </section>
+
+    <div class="case-grid">
+      <aside class="control-panel" aria-labelledby="controls-heading">
+        <div class="section-heading">
+          <p class="eyebrow">01 / INPUT</p>
+          <h2 id="controls-heading">设定一套成长方案</h2>
+        </div>
+        <form id="growth-controls" novalidate>
+          <div class="preset-row" aria-label="演示预设">
+            <button class="button button-secondary" type="button" data-growth-preset="baseline" aria-pressed="true">恢复基准</button>
+            <button class="button button-secondary" type="button" data-growth-preset="short" aria-pressed="false">紧凑日程</button>
+            <button class="button button-secondary" type="button" data-growth-preset="gentle" aria-pressed="false">缓坡成长</button>
+          </div>
+          <p class="growth-preset-label muted" id="growth-preset-label">已载入：基准起点</p>
+          <div class="field-row">
+            <div class="field">
+              <label for="growth-minutes">每日投入（分钟）</label>
+              <input id="growth-minutes" name="dailyMinutes" type="number" min="5" max="90" step="any" value="30" inputmode="decimal" aria-describedby="growth-error-dailyMinutes">
+              <span class="field-error" id="growth-error-dailyMinutes"></span>
+            </div>
+            <div class="field">
+              <label for="growth-gather">采集时间占比（%）</label>
+              <input id="growth-gather" name="gatherPercent" type="number" min="20" max="80" step="any" value="60" inputmode="decimal" aria-describedby="growth-gather-hint growth-error-gatherPercent">
+              <small class="muted" id="growth-gather-hint">剩余时间全部用于加工。</small>
+              <span class="field-error" id="growth-error-gatherPercent"></span>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="growth-cost">首次升级需求（点）</label>
+              <input id="growth-cost" name="baseCost" type="number" min="80" max="400" step="any" value="180" inputmode="decimal" aria-describedby="growth-error-baseCost">
+              <span class="field-error" id="growth-error-baseCost"></span>
+            </div>
+            <div class="field">
+              <label for="growth-cost-rise">逐级需求增幅（%）</label>
+              <input id="growth-cost-rise" name="costGrowthPercent" type="number" min="5" max="35" step="any" value="18" inputmode="decimal" aria-describedby="growth-error-costGrowthPercent">
+              <span class="field-error" id="growth-error-costGrowthPercent"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="growth-productivity">每级产能加成（%）</label>
+            <input id="growth-productivity" name="productivityPercent" type="number" min="0" max="20" step="any" value="8" inputmode="decimal" aria-describedby="growth-productivity-hint growth-error-productivityPercent">
+            <small class="muted" id="growth-productivity-hint">采集与加工同步提高，按初始产能线性叠加。</small>
+            <span class="field-error" id="growth-error-productivityPercent"></span>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="growth-target">目标等级</label>
+              <input id="growth-target" name="targetLevel" type="number" min="3" max="12" step="1" value="8" inputmode="numeric" aria-describedby="growth-error-targetLevel">
+              <span class="field-error" id="growth-error-targetLevel"></span>
+            </div>
+            <div class="field">
+              <label for="growth-horizon">观察窗口（天）</label>
+              <select id="growth-horizon" name="horizon" aria-describedby="growth-error-horizon">
+                <option value="30">30 天</option>
+                <option value="60" selected>60 天</option>
+                <option value="90">90 天</option>
+                <option value="120">120 天</option>
+              </select>
+              <span class="field-error" id="growth-error-horizon"></span>
+            </div>
+          </div>
+          <div class="growth-actions">
+            <button type="button" class="button" id="growth-export">导出演示参数 JSON</button>
+            <p class="muted">输入后即时重算。恢复基准会重置全部参数；导出仅包含本例参数与虚构标记。</p>
+            <p class="status" id="growth-export-status" role="status"></p>
+          </div>
+        </form>
+      </aside>
+
+      <section class="result-panel" aria-labelledby="results-heading">
+        <div class="section-heading">
+          <p class="eyebrow">02 / OUTPUT</p>
+          <h2 id="results-heading">看见节奏，也看见代价</h2>
+        </div>
+        <p class="status" id="growth-validation" role="alert" hidden></p>
+        <noscript><p class="notice">请启用 JavaScript 以使用参数模拟。下方仍可阅读模型规则与适用限制。</p></noscript>
+        <div id="growth-results-body" hidden>
+          <div class="metric-grid">
+            <div class="metric">
+              <span>达到目标用时</span>
+              <strong id="growth-target-day"></strong>
+              <small class="muted" id="growth-target-detail"></small>
+            </div>
+            <div class="metric">
+              <span>观察期末累计成长</span>
+              <strong id="growth-points"></strong>
+              <small class="muted" id="growth-points-detail"></small>
+            </div>
+            <div class="metric">
+              <span>未加工原料</span>
+              <strong id="growth-stock"></strong>
+              <small class="muted" id="growth-stock-detail"></small>
+            </div>
+            <div class="metric">
+              <span>加工利用率</span>
+              <strong id="growth-utilization"></strong>
+              <small class="muted" id="growth-utilization-detail"></small>
+            </div>
+          </div>
+          <p class="status" id="growth-day-comparison"></p>
+          <div class="legend growth-legend" aria-label="图例">
+            <span><i aria-hidden="true"></i>当前方案</span>
+            <span><i class="baseline-key" aria-hidden="true"></i>固定基准</span>
+            <span><i class="target-key" aria-hidden="true"></i>等级目标所需成长点</span>
+          </div>
+          <div class="chart-wrap growth-chart" id="growth-chart"></div>
+          <p class="growth-scroll-hint muted">小屏幕可横向滚动图表与表格。</p>
+          <p class="growth-caption muted" id="growth-chart-caption"></p>
+          <p class="growth-insight" id="growth-insight"></p>
+          <div class="table-wrap">
+            <table class="growth-table">
+              <caption class="sr-only">当前方案与固定基准的比较</caption>
+              <thead><tr><th scope="col">比较项</th><th scope="col">当前方案</th><th scope="col">固定基准</th></tr></thead>
+              <tbody id="growth-comparison"></tbody>
+            </table>
+          </div>
+          <p class="growth-comparison-note muted">固定基准：每日 30 分钟，采集占比 60%，首次升级 180 点，逐级需求增幅 18%，每级产能加成 8%。两方案使用同一目标等级与观察窗口；调整需求参数时，两方案的目标成长点会不同。达到 12 级后等级封顶，成长点继续累计；完成度最高显示 100%。</p>
+        </div>
+        <p class="sr-only" id="growth-live-summary" aria-live="polite" aria-atomic="true"></p>
+      </section>
+    </div>
+
+    <section class="case-section" aria-labelledby="sensitivity-heading">
+      <div class="section-heading">
+        <p class="eyebrow">03 / SENSITIVITY</p>
+        <h2 id="sensitivity-heading">一次只动一个参数</h2>
+      </div>
+      <p class="muted">以当前有效方案为参照，单独将一个参数乘以 0.9 或 1.1；目标等级、观察窗口与其他参数保持一致。括号为达标日相对当前方案的差值，负数表示更早。未达标不推算具体天数；超出输入范围的扰动不计算。</p>
+      <div class="table-wrap">
+        <table class="growth-table sensitivity-table">
+          <caption class="sr-only">单参数相对变化百分之十的敏感性分析</caption>
+          <thead><tr><th scope="col">调整参数</th><th scope="col">降低 10%</th><th scope="col">提高 10%</th></tr></thead>
+          <tbody id="growth-sensitivity"><tr><td colspan="3">输入有效参数后自动生成。</td></tr></tbody>
+        </table>
+      </div>
+      <p class="growth-caption muted">百分比参数也按相对值扰动，例如 18% → 16.2% / 19.8%；0% 的相对扰动仍为 0%。敏感性是当前参数附近的局部比较，不能据此直接判断全区间最优方案。</p>
+    </section>
+
+    <section class="case-section" aria-labelledby="method-heading">
+      <div class="section-heading">
+        <p class="eyebrow">04 / MODEL NOTES</p>
+        <h2 id="method-heading">让结果可以被复核</h2>
+      </div>
+      <div class="model-grid">
+        <div>
+          <h3>先分配时间，再结算成长</h3>
+          <p>初始为 1 级、0 库存、0 成长点。基础采集速率为 3 份原料/分钟，加工速率为 5 份原料/分钟；每加工 1 份原料获得 1 成长点。每天先采集、后加工，库存保留到次日，升级产生的加成次日生效。</p>
+          <div class="formula" aria-label="每日采集加工与成长计算公式">
+            <div><var>B</var><sub>d</sub> = 1 + <var>b</var> × (<var>L</var><sub>d−1</sub> − 1)</div>
+            <div><var>A</var><sub>d</sub> = 3<var>m</var><var>g</var><var>B</var><sub>d</sub>，<var>K</var><sub>d</sub> = 5<var>m</var>(1 − <var>g</var>)<var>B</var><sub>d</sub></div>
+            <div><var>Q</var><sub>d</sub> = min(<var>S</var><sub>d−1</sub> + <var>A</var><sub>d</sub>, <var>K</var><sub>d</sub>)</div>
+            <div><var>P</var><sub>d</sub> = <var>P</var><sub>d−1</sub> + <var>Q</var><sub>d</sub>，<var>S</var><sub>d</sub> = <var>S</var><sub>d−1</sub> + <var>A</var><sub>d</sub> − <var>Q</var><sub>d</sub></div>
+          </div>
+          <p class="model-symbols"><var>m</var>：每日分钟数；<var>g</var>：采集时间占比；<var>b</var>：每级产能加成。百分比代入时除以 100。<var>A</var> 是采集量，<var>K</var> 是加工容量，<var>Q</var> 是实际加工量，<var>P</var> 是累计成长点，<var>S</var> 是库存。</p>
+          <h3>用累计阈值判断等级</h3>
+          <div class="formula" aria-label="等级阈值计算公式">
+            <div><var>C</var><sub>ℓ</sub> = <var>C</var><sub>0</sub>(1 + <var>α</var>)<sup>ℓ−1</sup></div>
+            <div><var>T</var><sub>L</sub> = <var>C</var><sub>0</sub> × [(1 + <var>α</var>)<sup>L−1</sup> − 1] / <var>α</var></div>
+          </div>
+          <p class="model-symbols"><var>C</var><sub>ℓ</sub> 为 ℓ → ℓ+1 级所需成长点，<var>C</var><sub>0</sub> 为首次升级需求，<var>α</var> 为逐级需求增幅（本例为 5%–35%）。<var>T</var><sub>L</sub> 为达到 L 级的累计阈值；日末按已跨过的最高阈值更新等级，最高 12 级。</p>
+        </div>
+        <div>
+          <h3>可以从模型里讨论什么</h3>
+          <ul>
+            <li>时间是否分配给了真正限制产出的环节？按本例固定速率，采集占比 62.5% 时两端产能相等。</li>
+            <li>更快的成长来自投入增加、需求降低，还是产能反馈？对照目标阈值与曲线共同判断。</li>
+            <li>某个参数改动是否只改变少数天，还是持续放大差距？结合达标日与观察期末成长量看。</li>
+          </ul>
+          <h3>适用条件与限制</h3>
+          <ul>
+            <li>这是确定性的平均量模型，允许小数份原料；没有随机掉落、漏登、离线收益、付费、资源消耗与订单失败。</li>
+            <li>每日投入与时间比例全程固定，采集和加工共用同一等级加成；结论只在这些规则下成立。</li>
+            <li>日末结算采用整天粒度。一天跨越多级时，加成统一次日生效，不模拟当天重新分配时间。</li>
+            <li>观察期内未达标只表示当前窗口不够，不代表永远无法达到。库存也不自动等于收益。</li>
+            <li>实际节奏判断仍需引入玩家分层、留存行为与内容供给；本例不输出经营效果或体验优劣结论。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <p class="case-section"><a class="button button-secondary" href="internship.html">返回：实习与成长</a> <a class="button button-secondary" href="build-lab.html">继续查看：构筑方案实验室 →</a></p>
+  </main>
+  <footer class="site-footer"><div class="container"><p>李俊彦 · 游戏数值策划作品集</p><a href="index.html">返回首页</a></div></footer>
+</body>
+</html>
